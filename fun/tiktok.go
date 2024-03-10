@@ -11,7 +11,6 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/0supa/func_supa/fun"
 	"github.com/gempir/go-twitch-irc/v4"
 	regexp "github.com/wasilibs/go-re2"
 )
@@ -28,7 +27,7 @@ type Upload struct {
 
 func init() {
 	r := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
-	fun.RegisterFun(fun.Fun{
+	RegisterFun(Fun{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			link := strings.Replace(r.FindString(m.Message), "/reels/", "/reel/", 1)
@@ -79,7 +78,7 @@ func init() {
 				return errors.New(string(buf))
 			}
 
-			_, err = fun.Say(m.RoomID, "mirror: "+upload.Link+upload.Ext, m.ID)
+			_, err = Say(m.RoomID, "mirror: "+upload.Link+upload.Ext, m.ID)
 			return err
 		},
 	})
