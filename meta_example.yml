@@ -1,0 +1,6 @@
+channels:
+  - "675052240" # 8supa
+
+functions:
+  tiktok:
+    channels: ["*"]

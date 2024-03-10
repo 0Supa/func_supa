@@ -1,0 +1,4 @@
+twitch:
+  gql:
+    client_id: ""
+    token: ""
