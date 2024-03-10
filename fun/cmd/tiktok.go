@@ -41,13 +41,13 @@ func init() {
 				"--get-url", link,
 			).Output()
 			if err != nil {
-				return
+				return err
 			}
 
 			client := http.Client{}
 			res, err := client.Get(strings.TrimSuffix(string(out), "\n"))
 			if err != nil {
-				return
+				return err
 			}
 			defer res.Body.Close()
 
@@ -66,7 +66,7 @@ func init() {
 
 			res, err = client.Post("https://kappa.lol/api/upload?skip-cd=true", writer.FormDataContentType(), body)
 			if err != nil {
-				return
+				return err
 			}
 
 			buf, err := io.ReadAll(res.Body)
@@ -80,7 +80,7 @@ func init() {
 			}
 
 			_, err = fun.Say(m.RoomID, "mirror: "+upload.Link+upload.Ext, m.ID)
-			return
+			return err
 		},
 	})
 }
