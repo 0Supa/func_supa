@@ -1,14 +1,20 @@
 package fun
 
-import "github.com/gempir/go-twitch-irc/v4"
+import (
+	"github.com/gempir/go-twitch-irc/v4"
+)
 
-type Fun struct {
+type Cmd struct {
 	Name    string
 	Handler func(m twitch.PrivateMessage) error
 }
 
-var Funs = []Fun{}
-
-func RegisterFun(fun Fun) {
-	Funs = append(Funs, fun)
+type Fun struct {
+	Cmds []Cmd
 }
+
+func (f *Fun) Register(c *Cmd) {
+	f.Cmds = append(f.Cmds, *c)
+}
+
+var F = Fun{}

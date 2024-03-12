@@ -1,4 +1,4 @@
-package twitch
+package fun
 
 import (
 	logger "log"
@@ -6,7 +6,6 @@ import (
 	"slices"
 
 	"github.com/0supa/func_supa/config"
-	"github.com/0supa/func_supa/fun"
 
 	"github.com/gempir/go-twitch-irc/v4"
 )
@@ -24,16 +23,15 @@ func init() {
 	})
 
 	Client.OnPrivateMessage(func(m twitch.PrivateMessage) {
-		for _, cmd := range fun.Funs {
-			go func(cmd fun.Fun) {
+		for _, cmd := range F.Cmds {
+			go func(cmd Cmd) {
 				channels := config.Meta.Functions[cmd.Name].Channels
-				if channels[0] != "*" && !slices.Contains(channels, m.RoomID) {
+				if len(channels) > 0 && !slices.Contains(channels, m.RoomID) {
 					return
 				}
 
 				err := cmd.Handler(m)
 				if err != nil {
-					// fun.Say(m.RoomID, "upaS a message was about to be sent but something broke", m.ID)
 					Log.Printf("%v:\n%v\n", m, err)
 				}
 			}(cmd)
@@ -41,7 +39,7 @@ func init() {
 	})
 
 	for _, userID := range config.Meta.Channels {
-		u, err := fun.GetUser("", userID)
+		u, err := GetUser("", userID)
 		if err != nil {
 			Log.Println("failed getting user", err)
 		}

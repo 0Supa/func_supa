@@ -5,7 +5,7 @@ import (
 )
 
 func init() {
-	RegisterFun(Fun{
+	F.Register(&Cmd{
 		Name: "ping",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			if m.Message != "`ping" {

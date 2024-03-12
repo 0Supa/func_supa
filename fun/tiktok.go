@@ -26,11 +26,13 @@ type Upload struct {
 }
 
 func init() {
-	r := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
-	RegisterFun(Fun{
+	client := http.Client{}
+	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
+
+	F.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			link := strings.Replace(r.FindString(m.Message), "/reels/", "/reel/", 1)
+			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
 			if link == "" {
 				return
 			}
@@ -43,7 +45,6 @@ func init() {
 				return err
 			}
 
-			client := http.Client{}
 			res, err := client.Get(strings.TrimSuffix(string(out), "\n"))
 			if err != nil {
 				return err
