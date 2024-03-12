@@ -1,0 +1,68 @@
+package fun
+
+import (
+	"fmt"
+	"os"
+	"slices"
+	"strings"
+
+	"github.com/0supa/func_supa/config"
+	"github.com/gempir/go-twitch-irc/v4"
+	"gopkg.in/yaml.v3"
+)
+
+func init() {
+	F.Register(&Cmd{
+		Name: "join_part",
+		Handler: func(m twitch.PrivateMessage) (err error) {
+			if m.User.ID != "675052240" {
+				return
+			}
+
+			args := strings.Split(m.Message, " ")
+			if len(args) < 2 {
+				return
+			}
+
+			user, err := GetUser(args[1], "")
+			if err != nil {
+				Say(m.RoomID, "failed getting user: "+err.Error(), m.ID)
+			}
+
+			v := "+"
+			switch args[0] {
+			case "`join":
+				if slices.Contains(config.Meta.Channels, user.ID) {
+					_, err = Say(m.RoomID, "already joined", m.ID)
+					return
+				}
+				config.Meta.Channels = append(config.Meta.Channels, user.ID)
+			case "`part":
+				i := slices.Index(config.Meta.Channels, user.ID)
+				if i == -1 {
+					_, err = Say(m.RoomID, "not joined", m.ID)
+					return
+				}
+				config.Meta.Channels = slices.Delete(config.Meta.Channels, i, i+1)
+				v = "-"
+			default:
+				return
+			}
+
+			out, err := yaml.Marshal(config.Meta)
+			if err != nil {
+				return
+			}
+
+			err = os.WriteFile("meta.yml", out, 0644)
+			if err != nil {
+				return
+			}
+
+			Client.Join(user.Login)
+
+			_, err = Say(m.RoomID, fmt.Sprintf("%s #%s (%s)", v, user.Login, user.ID), m.ID)
+			return
+		},
+	})
+}
