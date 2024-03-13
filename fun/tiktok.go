@@ -51,8 +51,8 @@ func init() {
 			}
 			defer res.Body.Close()
 
-			body := &bytes.Buffer{}
-			writer := multipart.NewWriter(body)
+			fileBuf := &bytes.Buffer{}
+			writer := multipart.NewWriter(fileBuf)
 
 			h := make(textproto.MIMEHeader)
 			h.Set("Content-Disposition", `form-data; name="file"; filename="res.mp4"`)
@@ -64,10 +64,11 @@ func init() {
 			}
 			writer.Close()
 
-			res, err = client.Post("https://kappa.lol/api/upload?skip-cd=true", writer.FormDataContentType(), body)
+			res, err = client.Post("https://kappa.lol/api/upload?skip-cd=true", writer.FormDataContentType(), fileBuf)
 			if err != nil {
 				return err
 			}
+			defer res.Body.Close()
 
 			buf, err := io.ReadAll(res.Body)
 			var upload Upload

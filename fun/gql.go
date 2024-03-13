@@ -82,6 +82,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	if err != nil {
 		return
 	}
+	defer res.Body.Close()
 
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
@@ -116,6 +117,7 @@ func Say(channelID string, message string, parentID string) (response TwitchSend
 	if err != nil {
 		return
 	}
+	defer res.Body.Close()
 
 	err = json.NewDecoder(res.Body).Decode(&response)
 	if err != nil {
