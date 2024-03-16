@@ -51,6 +51,10 @@ func init() {
 			}
 			defer res.Body.Close()
 
+			if res.StatusCode != http.StatusOK {
+				return errors.New(res.Status + ": " + res.Request.RequestURI)
+			}
+
 			fileBuf := &bytes.Buffer{}
 			writer := multipart.NewWriter(fileBuf)
 
