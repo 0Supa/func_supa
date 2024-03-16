@@ -32,6 +32,8 @@ func init() {
 	F.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
+			tries := 0
+		retry:
 			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
 			if link == "" {
 				return
@@ -52,7 +54,15 @@ func init() {
 			defer res.Body.Close()
 
 			if res.StatusCode != http.StatusOK {
-				return errors.New(res.Status + ": " + res.Request.RequestURI)
+				if tries += 1; tries > 1 {
+					return errors.New(res.Status + ": " + res.Request.RequestURI)
+				}
+
+				err := exec.Command("yt-dlp", "--update-to", "master").Run()
+				if err != nil {
+					return err
+				}
+				goto retry
 			}
 
 			fileBuf := &bytes.Buffer{}
