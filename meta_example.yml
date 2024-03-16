@@ -1,6 +1,7 @@
 channels:
   - "675052240" # 8supa
 
+# functions with no 'channels' whitelisted are executed everywhere
 functions:
   tiktok:
-    channels: ["*"]
+    channels: ["675052240"]
