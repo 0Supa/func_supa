@@ -42,6 +42,7 @@ func init() {
 					return errors.New(res.Status + ": " + res.Request.RequestURI)
 				}
 
+				// try to update yt-dlp and retry download
 				err := exec.Command("yt-dlp", "--update-to", "master").Run()
 				if err != nil {
 					return err
