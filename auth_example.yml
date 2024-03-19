@@ -2,3 +2,6 @@ twitch:
   gql:
     client_id: ""
     token: ""
+cloudflare:
+  key: ""
+  account_id: ""
