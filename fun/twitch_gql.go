@@ -4,9 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/0supa/func_supa/config"
 )
@@ -93,17 +95,25 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	return
 }
 
-func Say(channelID string, message string, parentID string) (response TwitchSendMsgResponse, err error) {
-	if len(message) > 400 {
-		rc := io.NopCloser(strings.NewReader(message))
+var zeroWidthChar = "\U000E0000"
+
+func Say(channelID string, message string, parentID string, ctx ...int) (response TwitchSendMsgResponse, err error) {
+	if len(ctx) == 0 {
+		ctx = append(ctx, 1)
+	}
+
+	og := message
+	uploadMessage := func() (upload FileUpload) {
+		rc := io.NopCloser(strings.NewReader(og))
 		defer rc.Close()
 
-		var upload FileUpload
-		if upload, err = UploadFile(rc, "msg.txt", "text/plain"); err != nil {
-			return
-		}
+		// TODO: someway handle err?
+		upload, _ = UploadFile(rc, "msg.txt", "text/plain")
+		return
+	}
 
-		return Say(channelID, message[:200]+" [...] "+upload.Link, parentID)
+	if len(message) > 400 {
+		message = message[:200] + " [...] " + uploadMessage().Link
 	}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
@@ -137,7 +147,23 @@ func Say(channelID string, message string, parentID string) (response TwitchSend
 	}
 
 	if dropReason := response.Data.Mutation.DropReason; dropReason != nil {
-		return response, errors.New(*dropReason)
+		if *dropReason == "RATE_LIMIT" || *dropReason == "MSG_DUPLICATE" {
+			time.Sleep(time.Second)
+			suf := " " + zeroWidthChar
+			message, found := strings.CutSuffix(message, suf)
+			if !found {
+				message += suf
+			}
+
+			return Say(channelID, message, parentID, ctx...)
+		}
+
+		i := len(ctx) - 1
+		if ctx[i] > 2 {
+			return response, errors.New(*dropReason)
+		}
+
+		return Say(channelID, fmt.Sprintf("(%s) failed to send reply: %s", *dropReason, uploadMessage().Link), parentID, append(ctx[:i], ctx[i]+1)...)
 	}
 
 	return
