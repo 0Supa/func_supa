@@ -98,7 +98,7 @@ func Say(channelID string, message string, parentID string) (response TwitchSend
 		rc := io.NopCloser(strings.NewReader(message))
 		defer rc.Close()
 
-		var upload Upload
+		var upload FileUpload
 		if upload, err = UploadFile(rc, "msg.txt", "text/plain"); err != nil {
 			return
 		}

@@ -11,7 +11,7 @@ import (
 	"net/textproto"
 )
 
-type Upload struct {
+type FileUpload struct {
 	ID       string `json:"id"`
 	Ext      string `json:"ext"`
 	Type     string `json:"type"`
@@ -21,7 +21,7 @@ type Upload struct {
 	Delete   string `json:"delete"`
 }
 
-func UploadFile(body io.ReadCloser, fileName string, contentType string) (upload Upload, err error) {
+func UploadFile(body io.ReadCloser, fileName string, contentType string) (upload FileUpload, err error) {
 	fileBuf := &bytes.Buffer{}
 	writer := multipart.NewWriter(fileBuf)
 
