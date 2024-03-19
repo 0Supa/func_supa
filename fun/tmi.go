@@ -32,6 +32,7 @@ func init() {
 
 				err := cmd.Handler(m)
 				if err != nil {
+					Say(m.RoomID, "🚫 "+err.Error(), m.ID)
 					Log.Printf("%v:\n%v\n", m, err)
 				}
 			}(cmd)
