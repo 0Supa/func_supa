@@ -15,18 +15,20 @@ func init() {
 	F.Register(&Cmd{
 		Name: "join_part",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			if m.User.ID != "675052240" {
-				return
-			}
-
 			args := strings.Split(m.Message, " ")
-			if len(args) < 2 {
+			if m.User.ID != "675052240" || len(args) < 2 || (args[0] != "`join" && args[0] != "`part") {
 				return
 			}
 
 			user, err := GetUser(args[1], "")
 			if err != nil {
 				Say(m.RoomID, "failed getting user: "+err.Error(), m.ID)
+				return
+			}
+
+			if user.ID == "" {
+				Say(m.RoomID, "user not found", m.ID)
+				return
 			}
 
 			v := "+"
@@ -45,8 +47,6 @@ func init() {
 				}
 				config.Meta.Channels = slices.Delete(config.Meta.Channels, i, i+1)
 				v = "-"
-			default:
-				return
 			}
 
 			out, err := yaml.Marshal(config.Meta)
