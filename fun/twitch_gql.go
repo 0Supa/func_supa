@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
+	"strings"
 
 	"github.com/0supa/func_supa/config"
 )
@@ -92,6 +94,18 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 }
 
 func Say(channelID string, message string, parentID string) (response TwitchSendMsgResponse, err error) {
+	if len(message) > 400 {
+		rc := io.NopCloser(strings.NewReader(message))
+		defer rc.Close()
+
+		var upload Upload
+		if upload, err = UploadFile(rc, "msg.txt", "text/plain"); err != nil {
+			return
+		}
+
+		return Say(channelID, message[:200]+" [...] "+upload.Link, parentID)
+	}
+
 	payload, err := json.Marshal(TwitchGQLPayload{
 		OperationName: "SendChatMessage",
 		Query:         "mutation SendChatMessage($input: SendChatMessageInput!) {  sendChatMessage(input: $input) {  dropReason  message {  id  }  }  }",
