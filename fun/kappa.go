@@ -21,7 +21,7 @@ type FileUpload struct {
 	Delete   string `json:"delete"`
 }
 
-func UploadFile(body io.ReadCloser, fileName string, contentType string) (upload FileUpload, err error) {
+func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload FileUpload, err error) {
 	fileBuf := &bytes.Buffer{}
 	writer := multipart.NewWriter(fileBuf)
 
@@ -29,9 +29,8 @@ func UploadFile(body io.ReadCloser, fileName string, contentType string) (upload
 	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, QuoteEscaper.Replace(fileName)))
 	h.Set("Content-Type", contentType)
 
-	defer body.Close()
 	part, err := writer.CreatePart(h)
-	if _, err := io.Copy(part, body); err != nil {
+	if _, err := io.Copy(part, rc); err != nil {
 		return upload, err
 	}
 	writer.Close()
