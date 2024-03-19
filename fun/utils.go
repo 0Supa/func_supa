@@ -1,5 +1,13 @@
 package fun
 
-import "strings"
+import (
+	"net/http"
+	"strings"
+	"time"
+)
 
 var QuoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
+
+var GenericUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:104.0) Gecko/20100101 Firefox/104.0"
+
+var apiClient = http.Client{Timeout: time.Minute}

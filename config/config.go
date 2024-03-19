@@ -21,6 +21,10 @@ var Auth = struct {
 			Token    string `yaml:"token"`
 		} `yaml:"gql"`
 	} `yaml:"twitch"`
+	Cloudflare struct {
+		Key   string `yaml:"key"`
+		AccID string `yaml:"account_id"`
+	} `yaml:"cloudflare"`
 }{}
 
 func loadConfig(file string, y interface{}) {

@@ -58,8 +58,6 @@ type TwitchMsg struct {
 	Input `json:"input"`
 }
 
-var HTTP = http.Client{}
-
 func GetUser(login string, id string) (user TwitchUser, err error) {
 	response := TwitchUserResponse{}
 
@@ -78,7 +76,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 
-	res, err := HTTP.Do(req)
+	res, err := apiClient.Do(req)
 	if err != nil {
 		return
 	}
@@ -113,7 +111,7 @@ func Say(channelID string, message string, parentID string) (response TwitchSend
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.Token)
 
-	res, err := HTTP.Do(req)
+	res, err := apiClient.Do(req)
 	if err != nil {
 		return
 	}
