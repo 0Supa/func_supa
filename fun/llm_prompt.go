@@ -2,7 +2,6 @@ package fun
 
 import (
 	"fmt"
-	"io"
 	"strings"
 	"time"
 
@@ -22,7 +21,7 @@ Prompt:`,
 }
 
 func init() {
-	model := "@cf/mistral/mistral-7b-instruct-v0.1"
+	model := "@cf/meta/llama-2-7b-chat-fp16"
 	F.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
@@ -57,19 +56,6 @@ func init() {
 				builder.WriteString(data.Response)
 			}
 			res := builder.String()
-
-			if len(res) > 300 {
-				stringReader := strings.NewReader(res)
-				stringReadCloser := io.NopCloser(stringReader)
-
-				var upload Upload
-				if upload, err = UploadFile(stringReadCloser, "res.txt", "text/plain"); err != nil {
-					return
-				}
-
-				_, err = Say(m.RoomID, upload.Link, m.ID)
-				return
-			}
 
 			_, err = Say(m.RoomID, res, m.ID)
 			return
