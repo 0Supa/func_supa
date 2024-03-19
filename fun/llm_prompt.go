@@ -16,6 +16,7 @@ Do NOT add opening or closing sentences.
 You are talking to user '%s' in channel '%s'.
 
 Prompt:`,
+		// prompt appended with query
 		time.Now().Format("2006-01-02 15:04:05"),
 		m.User.Name, m.Channel)
 }
