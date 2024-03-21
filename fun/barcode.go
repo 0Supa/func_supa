@@ -48,7 +48,7 @@ func init() {
 				if len(dat) < 2 || (!strings.HasPrefix(dat[0], "EAN") && !strings.HasPrefix(dat[0], "UPC")) {
 					continue
 				}
-				_, err = Say(m.RoomID, "https://world.openfoodfacts.org/product/"+url.PathEscape(dat[1]), m.ID)
+				_, err = Say(m.RoomID, str+" https://world.openfoodfacts.org/product/"+url.PathEscape(dat[1]), m.ID)
 			}
 
 			return
