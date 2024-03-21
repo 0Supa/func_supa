@@ -24,6 +24,7 @@ func init() {
 			id := match[2]
 			fileURL := "https://kappa.lol/" + url.PathEscape(id)
 			res, err := apiClient.Head(fileURL)
+			res.Body.Close()
 			if err != nil || res.StatusCode != http.StatusOK || !strings.HasPrefix(res.Header.Get("Content-Type"), "image/") {
 				return
 			}
@@ -36,6 +37,7 @@ func init() {
 			cmd := exec.Command("zbarimg", "-q", "-")
 			cmd.Stdin = res.Body
 			out, err := cmd.Output()
+			res.Body.Close()
 			if err != nil {
 				if _, ok := err.(*exec.ExitError); ok {
 					return nil

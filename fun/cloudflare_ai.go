@@ -56,9 +56,9 @@ func StableDiffusionImage(prompt string) (io.ReadCloser, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != http.StatusOK || !strings.HasPrefix(res.Header.Get("content-type"), "image/") {
-		defer res.Body.Close()
 		b, err := io.ReadAll(res.Body)
 		if err != nil {
 			return nil, err
