@@ -1,8 +1,6 @@
 package fun
 
 import (
-	"errors"
-	"net/http"
 	"os/exec"
 	"strings"
 
@@ -16,41 +14,28 @@ func init() {
 	F.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			tries := 0
-		retry:
 			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
 			if link == "" {
 				return
 			}
 
-			out, err := exec.Command("yt-dlp",
+			cmd := exec.Command("yt-dlp",
 				"-S", "vcodec:h264",
-				"--get-url", link,
-			).Output()
+				link,
+				"-o", "-",
+			)
+			out, err := cmd.StdoutPipe()
 			if err != nil {
 				return err
 			}
+			defer out.Close()
 
-			res, err := apiClient.Get(strings.TrimSuffix(string(out), "\n"))
-			if err != nil {
-				return err
-			}
-			defer res.Body.Close()
-
-			if res.StatusCode != http.StatusOK {
-				if tries += 1; tries > 1 {
-					return errors.New(res.Status + ": " + res.Request.RequestURI)
-				}
-
-				// try to update yt-dlp and retry download
-				err := exec.Command("yt-dlp", "--update-to", "master").Run()
-				if err != nil {
-					return err
-				}
-				goto retry
+			if err = cmd.Start(); err != nil {
+				return
 			}
 
-			upload, err := UploadFile(res.Body, "res.mp4", res.Header.Get("Content-Type"))
+			// assuming it's always an mp4, not ideal
+			upload, err := UploadFile(out, "res.mp4", "video/mp4")
 			if err != nil {
 				return
 			}
