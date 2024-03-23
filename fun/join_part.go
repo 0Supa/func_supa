@@ -38,15 +38,17 @@ func init() {
 					_, err = Say(m.RoomID, "already joined", m.ID)
 					return
 				}
+				Client.Join(user.Login)
 				config.Meta.Channels = append(config.Meta.Channels, user.ID)
 			case "`part":
+				v = "-"
 				i := slices.Index(config.Meta.Channels, user.ID)
 				if i == -1 {
 					_, err = Say(m.RoomID, "not joined", m.ID)
 					return
 				}
+				Client.Depart(user.Login)
 				config.Meta.Channels = slices.Delete(config.Meta.Channels, i, i+1)
-				v = "-"
 			}
 
 			out, err := yaml.Marshal(config.Meta)
@@ -58,8 +60,6 @@ func init() {
 			if err != nil {
 				return
 			}
-
-			Client.Join(user.Login)
 
 			_, err = Say(m.RoomID, fmt.Sprintf("%s #%s (%s)", v, user.Login, user.ID), m.ID)
 			return
