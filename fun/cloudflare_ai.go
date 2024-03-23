@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -64,7 +64,7 @@ func StableDiffusionImage(prompt string) (io.ReadCloser, error) {
 			return nil, err
 		}
 
-		return nil, errors.New(string(b))
+		return nil, fmt.Errorf("StableDiffusionImage API nok (%v): %s", res.StatusCode, b)
 	}
 
 	return res.Body, nil
@@ -97,7 +97,7 @@ func TextGeneration(c chan Result, query TextQuery, model string) {
 			return
 		}
 
-		c <- Result{Error: errors.New(string(b))}
+		c <- Result{Error: fmt.Errorf("TextGeneration API nok (%v): %s", res.StatusCode, b)}
 		return
 	}
 

@@ -3,7 +3,6 @@ package fun
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -45,7 +44,7 @@ func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload F
 	err = json.Unmarshal(buf, &upload)
 
 	if res.StatusCode != http.StatusOK {
-		return upload, errors.New(string(buf))
+		return upload, fmt.Errorf("UploadFile API nok (%v): %s", res.StatusCode, buf)
 	}
 
 	return

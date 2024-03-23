@@ -3,7 +3,6 @@ package fun
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -160,7 +159,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 
 		i := len(ctx) - 1
 		if ctx[i] > 2 {
-			return response, errors.New(*dropReason)
+			return response, fmt.Errorf("message dropped after %v retries: %s", ctx[i], *dropReason)
 		}
 
 		return Say(channelID, fmt.Sprintf("(%s) failed to send reply: %s", *dropReason, uploadMessage().Link), parentID, append(ctx[:i], ctx[i]+1)...)
