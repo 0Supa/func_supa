@@ -34,7 +34,7 @@ func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload F
 	}
 	writer.Close()
 
-	res, err := apiClient.Post("https://kappa.lol/api/upload?skip-cd=true", writer.FormDataContentType(), fileBuf)
+	res, err := apiClient.Post("https://kappa.lol/api/upload", writer.FormDataContentType(), fileBuf)
 	if err != nil {
 		return
 	}
