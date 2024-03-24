@@ -1,0 +1,2 @@
+Dependencies: yt-dlp, zbarimg
+ - bin must be in $PATH
