@@ -40,6 +40,8 @@ func init() {
 				return
 			}
 
+			cmd.Wait() // releases any resources associated with the Cmd
+
 			_, err = Say(m.RoomID, "mirror: "+upload.Link+upload.Ext, m.ID)
 			return err
 		},
