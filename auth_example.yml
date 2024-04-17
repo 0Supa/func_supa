@@ -5,3 +5,5 @@ twitch:
 cloudflare:
   key: ""
   account_id: ""
+openai:
+  key: ""

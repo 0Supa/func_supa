@@ -112,7 +112,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 	}
 
 	if len(message) > 400 {
-		message = message[:200] + " [...] " + uploadMessage().Link
+		message = message[:200] + "... " + uploadMessage().Link
 	}
 
 	payload, err := json.Marshal(TwitchGQLPayload{

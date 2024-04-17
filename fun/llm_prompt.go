@@ -13,7 +13,7 @@ func systemPrompt(m twitch.PrivateMessage) string {
 - The current time is: %s
 - You are in the channel '%s', talking to user '%s'.
 - You can use Markdown syntax for formatting your response, excluding tables and images.
-	
+
 Rules you must follow:
 - Do NOT add opening or closing sentences.
 - Keep your response concise.

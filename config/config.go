@@ -25,6 +25,9 @@ var Auth = struct {
 		Key   string `yaml:"key"`
 		AccID string `yaml:"account_id"`
 	} `yaml:"cloudflare"`
+	OpenAI struct {
+		Key string `yaml:"key"`
+	} `yaml:"openai"`
 }{}
 
 func loadConfig(file string, y interface{}) {
