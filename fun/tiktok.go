@@ -1,8 +1,12 @@
 package fun
 
 import (
+	"fmt"
+	"net/url"
 	"os/exec"
+	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/gempir/go-twitch-irc/v4"
 	regexp "github.com/wasilibs/go-re2"
@@ -10,39 +14,40 @@ import (
 
 func init() {
 	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
+	parentDir := "/var/www/fi.supa.sh/tiktok"
 
 	F.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
+			link := links.FindString(m.Message)
 			if link == "" {
 				return
 			}
 
 			cmd := exec.Command("yt-dlp",
 				"-S", "vcodec:h264",
+				"--min-filesize", "50k",
+				"--max-filesize", "100M",
+				"--embed-metadata",
+				"-P", fmt.Sprintf("%s/%s", parentDir, m.User.Name),
+				"-o", fmt.Sprintf("%v.%%(ext)s", time.Now().Unix()),
+				"--restrict-filenames",
+				"-q", "--exec", "echo {}",
 				link,
-				"-o", "-",
 			)
-			out, err := cmd.StdoutPipe()
+			out, err := cmd.Output()
 			if err != nil {
 				return err
 			}
-			defer out.Close()
 
-			if err = cmd.Start(); err != nil {
-				return
-			}
+			fileName := filepath.Base(strings.TrimSuffix(string(out), "\n"))
 
-			// assuming it's always an mp4, not ideal
-			upload, err := UploadFile(out, "res.mp4", "video/mp4")
-			if err != nil {
-				return
-			}
+			_, err = Say(
+				m.RoomID,
+				fmt.Sprintf("mirror: https://fi.supa.sh/tiktok/%s/%s", m.User.ID, url.PathEscape(fileName)),
+				m.ID,
+			)
 
-			cmd.Wait() // releases any resources associated with the Cmd
-
-			_, err = Say(m.RoomID, "mirror: "+upload.Link+upload.Ext, m.ID)
 			return err
 		},
 	})
