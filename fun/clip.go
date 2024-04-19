@@ -52,7 +52,7 @@ func init() {
 				return
 			}
 
-			_, err = Say(m.RoomID, "https://clips.supa.sh/"+url.PathEscape(c.File), m.ID)
+			_, err = Say(m.RoomID, "https://fi.supa.sh/clips/"+url.PathEscape(c.File), m.ID)
 			return
 		},
 	})
