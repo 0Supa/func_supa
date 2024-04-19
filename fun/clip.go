@@ -29,7 +29,7 @@ func init() {
 				channel = args[1]
 			}
 
-			req, _ := http.NewRequest("POST", "http://192.168.100.31:8989/clip/"+url.PathEscape(channel), nil)
+			req, _ := http.NewRequest("POST", "http://127.0.0.1:8989/clip/"+url.PathEscape(channel), nil)
 			res, err := apiClient.Do(req)
 			if err != nil {
 				return
