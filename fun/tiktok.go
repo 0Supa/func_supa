@@ -44,7 +44,7 @@ func init() {
 
 			_, err = Say(
 				m.RoomID,
-				fmt.Sprintf("mirror: https://fi.supa.sh/tiktok/%s/%s", m.User.ID, url.PathEscape(fileName)),
+				fmt.Sprintf("mirror: https://fi.supa.sh/tiktok/%s/%s", m.User.Name, url.PathEscape(fileName)),
 				m.ID,
 			)
 
