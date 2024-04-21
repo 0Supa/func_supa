@@ -10,7 +10,7 @@ import (
 )
 
 type clip struct {
-	File    string `json:"file"`
+	Path    string `json:"path"`
 	Error   string `json:"error"`
 	Message string `json:"message"`
 }
@@ -52,7 +52,7 @@ func init() {
 				return
 			}
 
-			_, err = Say(m.RoomID, "https://fi.supa.sh/clips/"+c.File, m.ID)
+			_, err = Say(m.RoomID, "https://fi.supa.sh/clips/"+c.Path, m.ID)
 			return
 		},
 	})
