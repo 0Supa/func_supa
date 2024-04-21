@@ -2,6 +2,7 @@ package fun
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
@@ -11,7 +12,7 @@ import (
 
 type clip struct {
 	Path    string `json:"path"`
-	Error   string `json:"error"`
+	Error   int    `json:"error"`
 	Message string `json:"message"`
 }
 
@@ -42,13 +43,13 @@ func init() {
 				return
 			}
 
-			if c.Error != "" {
+			if c.Error != 0 {
 				if c.Message != "" {
 					_, err = Say(m.RoomID, c.Message, m.ID)
 					return
 				}
 
-				_, err = Say(m.RoomID, c.Error, m.ID)
+				_, err = Say(m.RoomID, fmt.Sprintf("something went wrong (%v)", c.Error), m.ID)
 				return
 			}
 
