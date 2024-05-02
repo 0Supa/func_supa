@@ -25,7 +25,7 @@ Q:`,
 }
 
 func init() {
-	model := "@cf/meta/llama-2-7b-chat-fp16"
+	model := "@cf/meta/llama-3-8b-instruct"
 	F.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
