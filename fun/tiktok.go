@@ -45,6 +45,10 @@ func init() {
 
 			fileName := filepath.Base(strings.TrimSuffix(string(out), "\n"))
 
+			if fileName == "" {
+				return
+			}
+
 			_, err = Say(
 				m.RoomID,
 				fmt.Sprintf("mirror: https://fi.supa.sh/tiktok/%s/%s", m.User.Name, url.PathEscape(fileName)),
