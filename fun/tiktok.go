@@ -45,7 +45,7 @@ func init() {
 
 			fileName := filepath.Base(strings.TrimSuffix(string(out), "\n"))
 
-			if fileName == "" {
+			if fileName == "." {
 				return
 			}
 
