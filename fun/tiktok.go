@@ -38,7 +38,8 @@ func init() {
 			out, err := cmd.Output()
 			if err != nil {
 				if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 1 {
-					return fmt.Errorf("%s:\n%s", err.Error(), exit.Stderr)
+					fmt.Printf("%s:\n%s\n", err.Error(), exit.Stderr)
+					return nil
 				}
 				return err
 			}
