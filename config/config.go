@@ -19,6 +19,7 @@ var Auth = struct {
 		GQL struct {
 			ClientID string `yaml:"client_id"`
 			Token    string `yaml:"token"`
+			UserID   string `yaml:"user_id"`
 		} `yaml:"gql"`
 	} `yaml:"twitch"`
 	Cloudflare struct {

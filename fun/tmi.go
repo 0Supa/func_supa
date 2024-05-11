@@ -23,6 +23,10 @@ func init() {
 	})
 
 	Client.OnPrivateMessage(func(m twitch.PrivateMessage) {
+		if m.User.ID == config.Auth.Twitch.GQL.UserID {
+			return
+		}
+
 		for _, cmd := range F.Cmds {
 			go func(cmd Cmd) {
 				channels := config.Meta.Functions[cmd.Name].Channels
