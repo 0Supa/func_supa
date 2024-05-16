@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/0supa/func_supa/config"
+	_ "github.com/0supa/func_supa/fun"
 )
 
 type LogChannels struct {
