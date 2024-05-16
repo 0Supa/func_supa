@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/0supa/func_supa/config"
-	"github.com/0supa/func_supa/fun"
 )
 
 type LogChannels struct {
@@ -119,7 +118,7 @@ func main() {
 			}
 			res.Body.Close()
 
-			fun.Say("675052240", resMsg.String(), "")
+			// fun.Say("675052240", resMsg.String(), "")
 		}
 	}()
 
