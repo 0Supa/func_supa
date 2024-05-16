@@ -85,6 +85,9 @@ func main() {
 				resMsg.WriteString("\n@" + ch.Name)
 				joinPayload.Channels = append(joinPayload.Channels, ch.UserID)
 			}
+			if len(joinPayload.Channels) == 0 {
+				return
+			}
 
 			body, err := json.Marshal(joinPayload)
 			if err != nil {
