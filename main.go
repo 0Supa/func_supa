@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"slices"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/0supa/func_supa/config"
@@ -32,7 +33,11 @@ type JoinPayload struct {
 	Channels []string `json:"channels"`
 }
 
+var wg = &sync.WaitGroup{}
+
 func main() {
+	wg.Add(1)
+
 	httpClient := http.Client{Timeout: time.Minute}
 	go func() {
 		for range time.Tick(time.Minute * 10) {
@@ -110,7 +115,9 @@ func main() {
 			}
 			res.Body.Close()
 
-			fun.Say("108311159", resMsg.String(), "")
+			fun.Say("675052240", resMsg.String(), "")
 		}
 	}()
+
+	wg.Wait()
 }

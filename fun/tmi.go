@@ -51,8 +51,10 @@ func init() {
 		Client.Join(u.Login)
 	}
 
-	err := Client.Connect()
-	if err != nil {
-		panic(err)
-	}
+	go func() {
+		err := Client.Connect()
+		if err != nil {
+			panic(err)
+		}
+	}()
 }
