@@ -29,6 +29,9 @@ var Auth = struct {
 	OpenAI struct {
 		Key string `yaml:"key"`
 	} `yaml:"openai"`
+	Rustlog struct {
+		Key string `yaml:"key"`
+	} `yaml:"rustlog"`
 }{}
 
 func loadConfig(file string, y interface{}) {
