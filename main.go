@@ -95,6 +95,7 @@ func main() {
 				"POST", "https://logs.supa.codes/admin/channels",
 				bytes.NewBuffer(body),
 			)
+			req.Header.Set("Content-Type", "application/json")
 			req.Header.Set("X-Api-Key", config.Auth.Rustlog.Key)
 
 			res, err = httpClient.Do(req)
