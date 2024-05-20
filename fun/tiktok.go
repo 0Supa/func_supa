@@ -32,7 +32,7 @@ func init() {
 
 			cooldown[m.User.ID] = struct{}{}
 
-			go func() {
+			defer func() {
 				time.Sleep(10 * time.Second)
 				delete(cooldown, m.User.ID)
 			}()
