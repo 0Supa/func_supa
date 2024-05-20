@@ -12,6 +12,8 @@ import (
 	regexp "github.com/wasilibs/go-re2"
 )
 
+var cooldown = map[string]struct{}{}
+
 func init() {
 	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
 	parentDir := "/var/www/fi.supa.sh/tiktok"
@@ -23,6 +25,17 @@ func init() {
 			if link == "" {
 				return
 			}
+
+			if _, found := cooldown[m.User.ID]; found {
+				return
+			}
+
+			cooldown[m.User.ID] = struct{}{}
+
+			go func() {
+				time.Sleep(10 * time.Second)
+				delete(cooldown, m.User.ID)
+			}()
 
 			cmd := exec.Command("yt-dlp",
 				"-S", "vcodec:h264",
