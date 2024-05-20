@@ -21,7 +21,7 @@ func init() {
 	F.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			link := links.FindString(m.Message)
+			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
 			if link == "" {
 				return
 			}
