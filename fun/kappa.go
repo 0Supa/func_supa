@@ -21,6 +21,8 @@ type FileUpload struct {
 }
 
 func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload FileUpload, err error) {
+	defer rc.Close()
+
 	fileBuf := &bytes.Buffer{}
 	writer := multipart.NewWriter(fileBuf)
 
