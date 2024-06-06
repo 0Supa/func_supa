@@ -49,12 +49,14 @@ func init() {
 	out, err := os.Create("./bin/yt-dlp")
 	if err != nil {
 		log.Println("failed creating yt-dlp bin", err)
+		return
 	}
 	defer out.Close()
 
 	_, err = io.Copy(out, res.Body)
 	if err != nil {
 		log.Println("failed writing yt-dlp bin", err)
+		return
 	}
 
 	err = os.Chmod("./bin/yt-dlp", 0755)
