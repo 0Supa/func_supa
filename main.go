@@ -6,6 +6,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"slices"
 	"strings"
 	"sync"
@@ -35,10 +36,37 @@ type JoinPayload struct {
 
 var wg = &sync.WaitGroup{}
 
+var httpClient = http.Client{Timeout: time.Minute}
+
+func init() {
+	res, err := httpClient.Get("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux")
+	if err != nil {
+		log.Println("failed downloading yt-dlp bin", err)
+		return
+	}
+	defer res.Body.Close()
+
+	out, err := os.Create("./bin/yt-dlp")
+	if err != nil {
+		log.Println("failed creating yt-dlp bin", err)
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, res.Body)
+	if err != nil {
+		log.Println("failed writing yt-dlp bin", err)
+	}
+
+	err = os.Chmod("./bin/yt-dlp", 0755)
+	if err != nil {
+		log.Println("failed setting +x on yt-dlp bin", err)
+		return
+	}
+}
+
 func main() {
 	wg.Add(1)
 
-	httpClient := http.Client{Timeout: time.Minute}
 	go func() {
 		for range time.Tick(time.Minute * 10) {
 			res, err := httpClient.Get("https://logs.supa.codes/channels")

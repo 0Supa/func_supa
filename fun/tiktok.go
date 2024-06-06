@@ -37,7 +37,7 @@ func init() {
 				delete(cooldown, m.User.ID)
 			}()
 
-			cmd := exec.Command("yt-dlp",
+			cmd := exec.Command("./bin/yt-dlp",
 				"-S", "vcodec:h264",
 				"--min-filesize", "50k",
 				"--max-filesize", "100M",
@@ -51,7 +51,7 @@ func init() {
 			out, err := cmd.Output()
 			if err != nil {
 				if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 1 {
-					fmt.Printf("%s:\n%s\n", err.Error(), exit.Stderr)
+					fmt.Printf("yt-dlp error: %s:\n%s\n", err.Error(), exit.Stderr)
 					return nil
 				}
 				return err
