@@ -15,6 +15,11 @@ func init() {
 			}
 
 			args := strings.Split(m.Message, " ")
+			if args[0] == "`echo" && len(args) >= 2 {
+				_, err = Say(m.RoomID, strings.Join(args[1:], " "), m.Reply.ParentMsgID)
+				return
+			}
+
 			if args[0] != "`say" || len(args) < 3 {
 				return
 			}
