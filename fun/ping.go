@@ -1,6 +1,9 @@
 package fun
 
 import (
+	"fmt"
+	"time"
+
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -12,7 +15,7 @@ func init() {
 				return
 			}
 
-			_, err = Say(m.RoomID, "pong!", m.ID)
+			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms", time.Now().Sub(m.Time).Milliseconds()), m.ID)
 			return
 		},
 	})
