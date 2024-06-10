@@ -16,7 +16,7 @@ func init() {
 		Name: "join_part",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
-			if m.User.ID != "675052240" || len(args) < 2 || (args[0] != "`join" && args[0] != "`part") {
+			if !IsPrivileged(m.User.ID) || len(args) < 2 || (args[0] != "`join" && args[0] != "`part") {
 				return
 			}
 

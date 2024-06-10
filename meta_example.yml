@@ -1,5 +1,7 @@
 channels:
   - "675052240" # 8supa
+privileged_users: # privileged users get access to some special commands, don't give to people you don't trust
+  - "675052240"
 
 # functions with no 'channels' whitelisted are executed everywhere
 functions:

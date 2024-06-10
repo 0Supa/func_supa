@@ -10,7 +10,7 @@ func init() {
 	F.Register(&Cmd{
 		Name: "say",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			if m.User.ID != "675052240" { // 8supa
+			if !IsPrivileged(m.User.ID) {
 				return
 			}
 

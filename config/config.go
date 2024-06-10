@@ -8,8 +8,9 @@ import (
 )
 
 var Meta = struct {
-	Channels  []string `yaml:"channels"`
-	Functions map[string]struct {
+	Channels        []string `yaml:"channels"`
+	PrivilegedUsers []string `yaml:"privileged_users"`
+	Functions       map[string]struct {
 		Channels []string `yaml:"channels"`
 	} `yaml:"functions"`
 }{}
