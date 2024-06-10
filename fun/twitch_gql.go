@@ -99,6 +99,8 @@ var zeroWidthChar = "\U000E0000"
 func Say(channelID string, message string, parentID string, ctx ...int) (response TwitchSendMsgResponse, err error) {
 	if len(ctx) == 0 {
 		ctx = append(ctx, 1)
+	} else {
+		ctx[0] = ctx[0] + 1
 	}
 
 	og := message
@@ -145,8 +147,12 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 		return
 	}
 
-	if dropReason := response.Data.Mutation.DropReason; dropReason != nil {
-		if *dropReason == "RATE_LIMIT" || *dropReason == "MSG_DUPLICATE" {
+	if dropReason := response.Data.Mutation.DropReason; dropReason != nil || response.Data.Mutation.Message.ID == "" {
+		if ctx[0] > 3 {
+			return response, fmt.Errorf("message dropped after %v attempts (%s)", ctx[0], *dropReason)
+		}
+
+		if *dropReason == "" || *dropReason == "RATE_LIMIT" || *dropReason == "MSG_DUPLICATE" {
 			time.Sleep(time.Second)
 			suf := " " + zeroWidthChar
 			message, found := strings.CutSuffix(message, suf)
@@ -157,12 +163,8 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 			return Say(channelID, message, parentID, ctx...)
 		}
 
-		i := len(ctx) - 1
-		if ctx[i] > 2 {
-			return response, fmt.Errorf("message dropped after %v retries: %s", ctx[i], *dropReason)
-		}
-
-		return Say(channelID, fmt.Sprintf("(%s) failed to send reply: %s", *dropReason, uploadMessage().Link), parentID, append(ctx[:i], ctx[i]+1)...)
+		return response, fmt.Errorf("message dropped (%s): %s", *dropReason, uploadMessage().Link)
+		// return Say(channelID, fmt.Sprintf("(%s) failed to send reply: %s", *dropReason, uploadMessage().Link), parentID, append(ctx[:i], ctx[i]+1)...)
 	}
 
 	return
