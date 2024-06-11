@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	. "github.com/0supa/func_supa/fun"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 	regexp "github.com/wasilibs/go-re2"
 )
@@ -18,7 +20,7 @@ func init() {
 	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
 	parentDir := "/var/www/fi.supa.sh/tiktok"
 
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)

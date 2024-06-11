@@ -6,6 +6,7 @@ import (
 	"slices"
 
 	"github.com/0supa/func_supa/config"
+	api_twitch "github.com/0supa/func_supa/fun/api/twitch"
 
 	"github.com/gempir/go-twitch-irc/v4"
 )
@@ -27,7 +28,7 @@ func init() {
 			return
 		}
 
-		for _, cmd := range F.Cmds {
+		for _, cmd := range Fun.Cmds {
 			go func(cmd Cmd) {
 				channels := config.Meta.Functions[cmd.Name].Channels
 				if len(channels) > 0 && !slices.Contains(channels, m.RoomID) {
@@ -36,7 +37,7 @@ func init() {
 
 				err := cmd.Handler(m)
 				if err != nil {
-					Say(m.RoomID, "🚫 "+err.Error(), m.ID)
+					api_twitch.Say(m.RoomID, "🚫 "+err.Error(), m.ID)
 					Log.Printf("%v:\n%v\n", m, err)
 				}
 			}(cmd)
@@ -44,7 +45,7 @@ func init() {
 	})
 
 	for _, userID := range config.Meta.Channels {
-		u, err := GetUser("", userID)
+		u, err := api_twitch.GetUser("", userID)
 		if err != nil {
 			Log.Println("failed getting user", err)
 		}

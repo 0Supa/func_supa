@@ -3,11 +3,15 @@ package fun
 import (
 	"strings"
 
+	. "github.com/0supa/func_supa/fun"
+	. "github.com/0supa/func_supa/fun/api/cloudlfare"
+	api_kappa "github.com/0supa/func_supa/fun/api/kappa"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
 func init() {
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "stable-diffusion",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
@@ -22,7 +26,7 @@ func init() {
 				return
 			}
 
-			upload, err := UploadFile(body, "image.png", "image/png")
+			upload, err := api_kappa.UploadFile(body, "image.png", "image/png")
 			if err != nil {
 				return
 			}

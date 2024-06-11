@@ -5,6 +5,9 @@ import (
 	"strings"
 	"time"
 
+	. "github.com/0supa/func_supa/fun"
+	. "github.com/0supa/func_supa/fun/api/cloudlfare"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -26,7 +29,7 @@ Q:`,
 
 func init() {
 	model := "@cf/meta/llama-3-8b-instruct"
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")

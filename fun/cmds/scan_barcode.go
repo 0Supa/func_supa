@@ -6,6 +6,9 @@ import (
 	"os/exec"
 	"strings"
 
+	. "github.com/0supa/func_supa/fun"
+	"github.com/0supa/func_supa/fun/api"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 	regexp "github.com/wasilibs/go-re2"
 )
@@ -13,8 +16,8 @@ import (
 func init() {
 	links := regexp.MustCompile(`(?i)\S*(i\.supa\.codes|kappa\.lol|gachi\.gay|femboy\.beauty)\/(\S+)`)
 
-	F.Register(&Cmd{
-		Name: "barcode",
+	Fun.Register(&Cmd{
+		Name: "scan_barcode",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			match := links.FindStringSubmatch(m.Message)
 			if len(match) < 3 {
@@ -23,13 +26,13 @@ func init() {
 
 			id := match[2]
 			fileURL := "https://kappa.lol/" + url.PathEscape(id)
-			res, err := apiClient.Head(fileURL)
+			res, err := api.Generic.Head(fileURL)
 			res.Body.Close()
 			if err != nil || res.StatusCode != http.StatusOK || !strings.HasPrefix(res.Header.Get("Content-Type"), "image/") {
 				return
 			}
 
-			res, err = apiClient.Get(fileURL)
+			res, err = api.Generic.Get(fileURL)
 			if err != nil {
 				return
 			}

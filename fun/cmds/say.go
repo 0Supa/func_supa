@@ -3,14 +3,17 @@ package fun
 import (
 	"strings"
 
+	. "github.com/0supa/func_supa/fun"
+	. "github.com/0supa/func_supa/fun/api/twitch"
+	"github.com/0supa/func_supa/fun/utils"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
 func init() {
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "say",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			if !IsPrivileged(m.User.ID) {
+			if !utils.IsPrivileged(m.User.ID) {
 				return
 			}
 

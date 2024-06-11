@@ -9,12 +9,12 @@ type Cmd struct {
 	Handler func(m twitch.PrivateMessage) error
 }
 
-type Fun struct {
+type FunData struct {
 	Cmds []Cmd
 }
 
-func (f *Fun) Register(c *Cmd) {
+func (f *FunData) Register(c *Cmd) {
 	f.Cmds = append(f.Cmds, *c)
 }
 
-var F = Fun{}
+var Fun = FunData{}

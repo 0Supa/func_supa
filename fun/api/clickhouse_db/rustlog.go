@@ -1,4 +1,4 @@
-package fun
+package logs_db
 
 import (
 	"context"

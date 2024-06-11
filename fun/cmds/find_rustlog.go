@@ -8,11 +8,14 @@ import (
 	"strings"
 	"time"
 
+	. "github.com/0supa/func_supa/fun"
+	logs_db "github.com/0supa/func_supa/fun/api/clickhouse_db"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
 func init() {
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "find",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
@@ -27,7 +30,7 @@ func init() {
 			}
 
 			pattern := strings.Join(args[1:], " ")
-			rows, err := Clickhouse.Query(context.Background(), "SELECT raw FROM message WHERE channel_id=? AND match(raw, ?) ORDER BY timestamp DESC", m.RoomID, pattern)
+			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT raw FROM message WHERE channel_id=? AND match(raw, ?) ORDER BY timestamp DESC", m.RoomID, pattern)
 			if err != nil {
 				return
 			}

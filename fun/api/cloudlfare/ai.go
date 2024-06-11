@@ -1,4 +1,4 @@
-package fun
+package api_cloudflare
 
 import (
 	"bufio"
@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/0supa/func_supa/config"
+	"github.com/0supa/func_supa/fun/api"
 )
 
 type QueryMessage struct {
@@ -83,7 +84,7 @@ func TextGeneration(c chan Result, query TextQuery, model string) {
 	)
 	req.Header.Set("Authorization", "Bearer "+config.Auth.Cloudflare.Key)
 
-	res, err := apiClient.Do(req)
+	res, err := api.Generic.Do(req)
 	if err != nil {
 		c <- Result{Error: err}
 		return

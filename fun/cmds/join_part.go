@@ -7,16 +7,19 @@ import (
 	"strings"
 
 	"github.com/0supa/func_supa/config"
+	. "github.com/0supa/func_supa/fun"
+	. "github.com/0supa/func_supa/fun/api/twitch"
+	"github.com/0supa/func_supa/fun/utils"
 	"github.com/gempir/go-twitch-irc/v4"
 	"gopkg.in/yaml.v3"
 )
 
 func init() {
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "join_part",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
-			if !IsPrivileged(m.User.ID) || len(args) < 2 || (args[0] != "`join" && args[0] != "`part") {
+			if !utils.IsPrivileged(m.User.ID) || len(args) < 2 || (args[0] != "`join" && args[0] != "`part") {
 				return
 			}
 

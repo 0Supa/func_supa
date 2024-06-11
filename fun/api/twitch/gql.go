@@ -1,4 +1,4 @@
-package fun
+package api_twitch
 
 import (
 	"bytes"
@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/0supa/func_supa/config"
+	"github.com/0supa/func_supa/fun/api"
+	api_kappa "github.com/0supa/func_supa/fun/api/kappa"
 )
 
 type TwitchGQLPayload struct {
@@ -79,7 +81,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 
-	res, err := apiClient.Do(req)
+	res, err := api.Generic.Do(req)
 	if err != nil {
 		return
 	}
@@ -104,12 +106,12 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 	}
 
 	og := message
-	uploadMessage := func() (upload FileUpload) {
+	uploadMessage := func() (upload api_kappa.FileUpload) {
 		rc := io.NopCloser(strings.NewReader(og))
 		defer rc.Close()
 
 		// TODO: someway handle err?
-		upload, _ = UploadFile(rc, "msg.txt", "text/plain")
+		upload, _ = api_kappa.UploadFile(rc, "msg.txt", "text/plain")
 		return
 	}
 
@@ -136,7 +138,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.Token)
 
-	res, err := apiClient.Do(req)
+	res, err := api.Generic.Do(req)
 	if err != nil {
 		return
 	}

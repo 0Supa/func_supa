@@ -1,4 +1,4 @@
-package fun
+package api_kappa
 
 import (
 	"bytes"
@@ -8,6 +8,9 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/textproto"
+
+	"github.com/0supa/func_supa/fun/api"
+	"github.com/0supa/func_supa/fun/utils"
 )
 
 type FileUpload struct {
@@ -27,7 +30,7 @@ func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload F
 	writer := multipart.NewWriter(fileBuf)
 
 	h := make(textproto.MIMEHeader)
-	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, QuoteEscaper.Replace(fileName)))
+	h.Set("Content-Disposition", fmt.Sprintf(`form-data; name="file"; filename="%s"`, utils.QuoteEscaper.Replace(fileName)))
 	h.Set("Content-Type", contentType)
 
 	part, err := writer.CreatePart(h)
@@ -36,7 +39,7 @@ func UploadFile(rc io.ReadCloser, fileName string, contentType string) (upload F
 	}
 	writer.Close()
 
-	res, err := apiClient.Post("https://kappa.lol/api/upload", writer.FormDataContentType(), fileBuf)
+	res, err := api.Generic.Post("https://kappa.lol/api/upload", writer.FormDataContentType(), fileBuf)
 	if err != nil {
 		return
 	}

@@ -7,6 +7,9 @@ import (
 	"net/url"
 	"strings"
 
+	. "github.com/0supa/func_supa/fun"
+	"github.com/0supa/func_supa/fun/api"
+	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -17,7 +20,7 @@ type clip struct {
 }
 
 func init() {
-	F.Register(&Cmd{
+	Fun.Register(&Cmd{
 		Name: "clip",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
@@ -31,7 +34,7 @@ func init() {
 			}
 
 			req, _ := http.NewRequest("POST", "http://127.0.0.1:8989/clip/"+url.PathEscape(channel), nil)
-			res, err := apiClient.Do(req)
+			res, err := api.Generic.Do(req)
 			if err != nil {
 				return
 			}
