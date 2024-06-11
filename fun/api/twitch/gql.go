@@ -79,6 +79,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	}
 
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
+	req.Header.Set("User-Agent", api.GenericUserAgent)
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 
 	res, err := api.Generic.Do(req)
@@ -135,6 +136,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 	}
 
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
+	req.Header.Set("User-Agent", api.GenericUserAgent)
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
 	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.Token)
 
