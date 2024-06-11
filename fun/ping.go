@@ -15,7 +15,7 @@ func init() {
 				return
 			}
 
-			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms", time.Now().Sub(m.Time).Milliseconds()), m.ID)
+			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms", time.Since(m.Time).Milliseconds()), m.ID)
 			return
 		},
 	})
