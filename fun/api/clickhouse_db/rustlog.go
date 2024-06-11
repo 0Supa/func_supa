@@ -2,10 +2,13 @@ package logs_db
 
 import (
 	"context"
-	"log"
+	logger "log"
+	"os"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 )
+
+var log = logger.New(os.Stdout, "Clickhouse ", logger.LstdFlags)
 
 var (
 	ctx             = context.Background()

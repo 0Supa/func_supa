@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
-	"log"
+	logger "log"
 	"net/http"
 	"os"
 	"slices"
@@ -38,6 +38,8 @@ type JoinPayload struct {
 var wg = &sync.WaitGroup{}
 
 var httpClient = http.Client{Timeout: time.Minute}
+
+var log = logger.New(os.Stdout, "System ", logger.LstdFlags)
 
 func init() {
 	res, err := httpClient.Get("https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux")
@@ -113,7 +115,7 @@ func main() {
 				if ch.Viewers < 2 || slices.Contains(ignored, ch.UserID) {
 					continue
 				}
-				resMsg.WriteString("\n@" + ch.Name)
+				resMsg.WriteString(" @" + ch.Name)
 				joinPayload.Channels = append(joinPayload.Channels, ch.UserID)
 			}
 			if len(joinPayload.Channels) == 0 {
@@ -150,6 +152,7 @@ func main() {
 			}
 			res.Body.Close()
 
+			log.Println(resMsg.String())
 			// fun.Say("675052240", resMsg.String(), "")
 		}
 	}()

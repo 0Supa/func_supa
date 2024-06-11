@@ -11,16 +11,17 @@ import (
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
-var Log = logger.New(os.Stdout, "TMI ", logger.LstdFlags)
 var Client = twitch.NewAnonymousClient()
+
+var log = logger.New(os.Stdout, "TMI ", logger.LstdFlags)
 
 func init() {
 	Client.OnConnect(func() {
-		Log.Println("connected")
+		log.Println("connected")
 	})
 
 	Client.OnSelfJoinMessage(func(m twitch.UserJoinMessage) {
-		Log.Println("joined", m.Channel)
+		log.Println("joined", m.Channel)
 	})
 
 	Client.OnPrivateMessage(func(m twitch.PrivateMessage) {
@@ -38,7 +39,7 @@ func init() {
 				err := cmd.Handler(m)
 				if err != nil {
 					api_twitch.Say(m.RoomID, "🚫 "+err.Error(), m.ID)
-					Log.Printf("%v:\n%v\n", m, err)
+					log.Printf("%v:\n%v\n", m, err)
 				}
 			}(cmd)
 		}
@@ -47,7 +48,7 @@ func init() {
 	for _, userID := range config.Meta.Channels {
 		u, err := api_twitch.GetUser("", userID)
 		if err != nil {
-			Log.Println("failed getting user", err)
+			log.Println("failed getting user", err)
 		}
 		Client.Join(u.Login)
 	}

@@ -2,6 +2,7 @@ package fun
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"os/exec"
 	"path/filepath"
@@ -53,7 +54,7 @@ func init() {
 			out, err := cmd.Output()
 			if err != nil {
 				if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 1 {
-					fmt.Printf("yt-dlp error: %s:\n%s\n", err.Error(), exit.Stderr)
+					log.Printf("yt-dlp error: %s:\n%s\n", err.Error(), exit.Stderr)
 					return nil
 				}
 				return err
