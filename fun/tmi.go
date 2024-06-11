@@ -38,8 +38,8 @@ func init() {
 
 				err := cmd.Handler(m)
 				if err != nil {
+					log.Printf("[cmd error] %v: %v => %v\n", m.User.Name, m.Message, err)
 					api_twitch.Say(m.RoomID, "🚫 "+err.Error(), m.ID)
-					log.Printf("%v:\n%v\n", m, err)
 				}
 			}(cmd)
 		}
