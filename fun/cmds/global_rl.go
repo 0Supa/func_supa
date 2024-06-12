@@ -35,7 +35,7 @@ func init() {
 			}
 
 			var count int
-			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM messages WHERE user_id = ?", target).Scan(count)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM message WHERE user_id = ?", target).Scan(count)
 			if err != nil {
 				return
 			}
@@ -48,7 +48,7 @@ func init() {
 			offset := rand.Intn(count)
 
 			var raw string
-			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT raw FROM messages WHERE user_id = ? LIMIT 1 OFFSET ?", target, offset).Scan(raw)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT raw FROM message WHERE user_id = ? LIMIT 1 OFFSET ?", target, offset).Scan(raw)
 			if err != nil {
 				return
 			}
