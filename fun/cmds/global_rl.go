@@ -35,7 +35,7 @@ func init() {
 			}
 
 			var count uint64
-			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM message WHERE user_id = ?", target).Scan(count)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM message WHERE user_id = ?", target).Scan(&count)
 			if err != nil {
 				return
 			}
