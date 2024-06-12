@@ -48,7 +48,7 @@ func init() {
 			offset := rand.Intn(int(count))
 
 			var raw string
-			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT raw FROM message WHERE user_id = ? LIMIT 1 OFFSET ?", target, offset).Scan(raw)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT raw FROM message WHERE user_id = ? LIMIT 1 OFFSET ?", target, offset).Scan(&raw)
 			if err != nil {
 				return
 			}
