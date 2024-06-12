@@ -19,7 +19,11 @@ func init() {
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
 
-			if args[0] != "`grl" && args[0] != "`grq" {
+			db := "rustlog"
+
+			if args[0] == "`zrl" {
+				db = "rustlog_zonian"
+			} else if args[0] != "`grl" && args[0] != "`grq" {
 				return
 			}
 
@@ -35,7 +39,7 @@ func init() {
 			}
 
 			var count uint64
-			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM message WHERE user_id = ?", target).Scan(&count)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), "SELECT count() FROM ?.message WHERE user_id = ?", db, target).Scan(&count)
 			if err != nil {
 				return
 			}
@@ -56,6 +60,7 @@ func init() {
 			rMsg := twitch.ParseMessage(raw)
 
 			switch msg := rMsg.(type) {
+			case *twitch.UserNoticeMessage:
 			case *twitch.PrivateMessage:
 				_, err = Say(m.RoomID, fmt.Sprintf("[%s] #%s %s: %s", humanize.Time(msg.Time), msg.Channel, msg.User.Name, msg.Message), m.ID)
 			default:
