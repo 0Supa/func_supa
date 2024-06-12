@@ -52,7 +52,12 @@ func init() {
 			offset := rand.Intn(int(count))
 
 			var raw string
-			err = logs_db.Clickhouse.QueryRow(context.Background(), fmt.Sprintf("SELECT raw FROM %s.message WHERE user_id = ? LIMIT 1 OFFSET ?", db), target, offset).Scan(&raw)
+			err = logs_db.Clickhouse.QueryRow(context.Background(), fmt.Sprintf(`
+			WITH
+			(SELECT timestamp FROM %s.message WHERE user_id = ? LIMIT 1 OFFSET ?)
+			AS random_timestamp
+			SELECT raw FROM %s.message WHERE user_id = ? AND timestamp = random_timestamp LIMIT 1
+			`, db, db), target, offset, target).Scan(&raw)
 			if err != nil {
 				return
 			}
