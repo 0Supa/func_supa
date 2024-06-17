@@ -124,6 +124,7 @@ func main() {
 
 			body, err := json.Marshal(joinPayload)
 			if err != nil {
+				log.Println(err)
 				return
 			}
 
@@ -144,10 +145,10 @@ func main() {
 				log.Println("failed joining new rustlog channels")
 
 				b, err := io.ReadAll(res.Body)
-				if err != nil {
-					return
-				}
 				log.Println(string(b))
+				if err != nil {
+					log.Println(err)
+				}
 				return
 			}
 			res.Body.Close()
