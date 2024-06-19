@@ -42,7 +42,6 @@ func init() {
 
 			cmd := exec.Command("./bin/yt-dlp",
 				"-S", "vcodec:h264",
-				"--min-filesize", "50k",
 				"--max-filesize", "100M",
 				"--embed-metadata",
 				"-P", fmt.Sprintf("%s/%s", parentDir, m.User.Name),
