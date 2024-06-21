@@ -33,13 +33,18 @@ func init() {
 
 			user, err := GetUser(args[1], "")
 			if err != nil {
-				_, err = Say(m.RoomID, "user not found: "+err.Error(), m.ID)
+				_, err = Say(m.RoomID, "get user: "+err.Error(), m.ID)
+				return
+			}
+
+			if user.ID == "" {
+				_, err = Say(m.RoomID, "user not found", m.ID)
 				return
 			}
 
 			res, err := Say(user.ID, strings.Join(args[2:], " "), "")
 			if err != nil {
-				_, err = Say(m.RoomID, "failed sending message: "+err.Error(), m.ID)
+				_, err = Say(m.RoomID, err.Error(), m.ID)
 				return
 			}
 
