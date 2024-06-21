@@ -68,7 +68,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 
 	payload, err := json.Marshal(TwitchGQLPayload{
 		OperationName: "User",
-		Query:         "query User($login:String $id:ID) { user(login:$login id:$id) { id login displayName } }",
+		Query:         "query User($login:String $id:ID) { user(lookupType:ALL login:$login id:$id) { id login displayName } }",
 		Variables: TwitchUser{
 			Login: login,
 			ID:    id,
