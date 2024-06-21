@@ -151,7 +151,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 		return
 	}
 
-	if dropReason := response.Data.Mutation.DropReason; dropReason != nil || response.Data.Mutation.Message.ID == "" {
+	if dropReason := response.Data.Mutation.DropReason; dropReason != nil && response.Data.Mutation.Message.ID == "" {
 		if ctx[0] > 3 {
 			return response, fmt.Errorf("message dropped after %v attempts (%s)", ctx[0], *dropReason)
 		}
