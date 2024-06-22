@@ -3,7 +3,6 @@ package fun
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"os"
 	"strings"
 	"time"
@@ -19,49 +18,50 @@ func init() {
 		Name: "find",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
-
-			if args[0] != "`find" {
+			if len(args) < 1 || args[0] != "`find" {
 				return
 			}
 
-			if len(args) < 1 {
-				_, err = Say(m.RoomID, "must specify match pattern", m.ID)
-				return
+			if len(args) < 2 {
+				_, err := Say(m.RoomID, "must specify a match pattern", m.ID)
+				return err
 			}
 
 			pattern := strings.Join(args[1:], " ")
-			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT raw FROM message WHERE channel_id=? AND match(raw, ?) ORDER BY timestamp DESC", m.RoomID, pattern)
+			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT timestamp, user_login, text FROM message_structured WHERE channel_id=? AND match(text, ?) ORDER BY timestamp DESC", m.RoomID, pattern)
 			if err != nil {
 				return
 			}
 			defer rows.Close()
 
 			tt := time.Now().UnixMilli()
-			f, err := os.Create(fmt.Sprintf("/var/www/fi.supa.sh/dump/%v.txt", tt))
+			filePath := fmt.Sprintf("/var/www/fi.supa.sh/dump/%v.txt", tt)
+			f, err := os.Create(filePath)
 			if err != nil {
 				return
 			}
+			defer f.Close()
 
-			fmt.Fprintf(f, "@badges=staff/1;color=#FFFFFF;display-name=System;first-msg=0;flags=;id=0;mod=0;returning-chatter=0;room-id=%s;subscriber=0;tmi-sent-ts=%v;turbo=0;user-id=1;user-type=staff :system!system@system.tmi.twitch.tv PRIVMSG #%s :logs.supa.codes dump - query: `%s`\n", m.RoomID, tt, m.Channel, pattern)
+			fmt.Fprintf(f, "#%s logs.supa.codes dump - query: `%s`\n\n", m.Channel, pattern)
 
-			var len int
-			var raw string
+			var messageCount int
+			var timestamp time.Time
+			var user, text string
+
 			for rows.Next() {
-				rows.Scan(&raw)
-				fmt.Fprintln(f, raw)
-				len = len + 1
-			}
-
-			if err := f.Close(); err != nil {
-				return err
+				if err := rows.Scan(&timestamp, &user, &text); err != nil {
+					return err
+				}
+				fmt.Fprintf(f, "[%s] %s: %s\n", timestamp.Format("2006-01-02 15:04:05"), user, text)
+				messageCount++
 			}
 
 			if err := rows.Err(); err != nil {
 				return err
 			}
 
-			_, err = Say(m.RoomID, fmt.Sprintf("found %v messages: https://logs.raccatta.cc/?url=%s?raw=1&limit=99999", len, url.QueryEscape(fmt.Sprintf("https://fi.supa.sh/dump/%v.txt", tt))), m.ID)
-			return
+			_, err = Say(m.RoomID, fmt.Sprintf("found %v messages: %s", messageCount, fmt.Sprintf("https://fi.supa.sh/dump/%v.txt", tt)), m.ID)
+			return err
 		},
 	})
 }
