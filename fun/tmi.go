@@ -16,6 +16,18 @@ var Client = twitch.NewAnonymousClient()
 var log = logger.New(os.Stdout, "TMI ", logger.LstdFlags)
 
 func init() {
+	user, err := api_twitch.GetSelf()
+	if err != nil {
+		logger.Panicln("failed getting current user", err)
+	}
+
+	if user.BlockedUsers != nil {
+		for _, u := range *user.BlockedUsers {
+			Fun.BlockedUserIDs = append(Fun.BlockedUserIDs, u.ID)
+		}
+		log.Printf("%v blocked Twitch users\n", len(Fun.BlockedUserIDs))
+	}
+
 	Client.OnConnect(func() {
 		log.Println("connected")
 	})
@@ -26,6 +38,10 @@ func init() {
 
 	Client.OnPrivateMessage(func(m twitch.PrivateMessage) {
 		if m.User.ID == config.Auth.Twitch.GQL.UserID {
+			return
+		}
+
+		if slices.Contains(Fun.BlockedUserIDs, m.User.ID) {
 			return
 		}
 
@@ -56,7 +72,7 @@ func init() {
 	go func() {
 		err := Client.Connect()
 		if err != nil {
-			panic(err)
+			log.Panicln("failed connecting to Twitch IRC", err)
 		}
 	}()
 }

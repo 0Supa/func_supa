@@ -51,6 +51,8 @@ type TwitchUser struct {
 	ID          string `json:"id,omitempty"`
 	Login       string `json:"login,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
+
+	BlockedUsers *[]TwitchUser `json:"blockedUsers"`
 }
 
 type Input struct {
@@ -81,6 +83,40 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
 	req.Header.Set("User-Agent", api.GenericUserAgent)
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
+
+	res, err := api.Generic.Do(req)
+	if err != nil {
+		return
+	}
+	defer res.Body.Close()
+
+	err = json.NewDecoder(res.Body).Decode(&response)
+	if err != nil {
+		return
+	}
+
+	user = response.Data.User
+	return
+}
+
+func GetSelf() (user TwitchUser, err error) {
+	response := TwitchUserResponse{}
+
+	payload, err := json.Marshal(TwitchGQLPayload{
+		OperationName: "User",
+		Query:         "query User($login:String $id:ID) { user(lookupType:ALL login:$login id:$id) { id login displayName blockedUsers { id login } } }",
+		Variables: TwitchUser{
+			ID: config.Auth.Twitch.GQL.UserID,
+		},
+	})
+	if err != nil {
+		return
+	}
+
+	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
+	req.Header.Set("User-Agent", api.GenericUserAgent)
+	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
+	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.Token)
 
 	res, err := api.Generic.Do(req)
 	if err != nil {

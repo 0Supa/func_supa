@@ -10,7 +10,8 @@ type Cmd struct {
 }
 
 type FunData struct {
-	Cmds []Cmd
+	Cmds           []Cmd
+	BlockedUserIDs []string
 }
 
 func (f *FunData) Register(c *Cmd) {
