@@ -12,7 +12,7 @@ import (
 
 func init() {
 	Fun.Register(&Cmd{
-		Name: "stable-diffusion",
+		Name: "stable_diffusion",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
 			if (args[0] != "`sd") || len(args) < 2 {
