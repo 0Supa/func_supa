@@ -13,7 +13,7 @@ func init() {
 	Fun.Register(&Cmd{
 		Name: "restart",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			if !utils.IsPrivileged(m.User.ID) && m.Message != "`restart" {
+			if !utils.IsPrivileged(m.User.ID) || m.Message != "`restart" {
 				return
 			}
 
