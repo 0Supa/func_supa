@@ -6,7 +6,7 @@ import (
 	"time"
 
 	. "github.com/0supa/func_supa/fun"
-	. "github.com/0supa/func_supa/fun/api/cloudlfare"
+	. "github.com/0supa/func_supa/fun/api/cloudflare"
 	. "github.com/0supa/func_supa/fun/api/twitch"
 	"github.com/gempir/go-twitch-irc/v4"
 )
