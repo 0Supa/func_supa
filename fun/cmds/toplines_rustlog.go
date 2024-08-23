@@ -35,7 +35,7 @@ func init() {
 				return
 			}
 
-			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT channel_login, count() AS lines FROM rustlog_zonian.message_structured WHERE user_id=? GROUP BY channel_login ORDER BY lines DESC", user.ID)
+			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT channel_id, anyLast(channel_login), count() AS lines FROM rustlog_zonian.message_structured WHERE user_id=? GROUP BY channel_id ORDER BY lines DESC", user.ID)
 			if err != nil {
 				return
 			}
@@ -43,17 +43,18 @@ func init() {
 
 			tableString := &strings.Builder{}
 			table := tablewriter.NewWriter(tableString)
-			table.SetHeader([]string{"Channel", "Lines"})
+			table.SetHeader([]string{"cID", "Channel", "Lines"})
 
+			var cID string
 			var cLogin string
 			var lineCount uint64
 			var totalLines uint64
 			for rows.Next() {
-				if err := rows.Scan(&cLogin, &lineCount); err != nil {
+				if err := rows.Scan(&cID, &cLogin, &lineCount); err != nil {
 					return err
 				}
 				totalLines += lineCount
-				table.Append([]string{cLogin, fmt.Sprintf("%v", lineCount)})
+				table.Append([]string{cID, cLogin, fmt.Sprintf("%v", lineCount)})
 			}
 
 			tableString.WriteString(fmt.Sprintf("Top lines by @%s, total: %v\n\n", user.Login, totalLines))
