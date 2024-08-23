@@ -55,6 +55,8 @@ func init() {
 				table.Append([]string{cLogin, fmt.Sprintf("%v", lineCount)})
 			}
 
+			table.Render()
+
 			rc := io.NopCloser(strings.NewReader(tableString.String()))
 			defer rc.Close()
 
