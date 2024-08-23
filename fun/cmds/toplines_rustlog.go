@@ -42,19 +42,21 @@ func init() {
 			defer rows.Close()
 
 			tableString := &strings.Builder{}
-			tableString.WriteString("Top lines by @" + user.Login + "\n\n")
 			table := tablewriter.NewWriter(tableString)
 			table.SetHeader([]string{"Channel", "Lines"})
 
 			var cLogin string
 			var lineCount uint64
+			var totalLines uint64
 			for rows.Next() {
 				if err := rows.Scan(&cLogin, &lineCount); err != nil {
 					return err
 				}
+				totalLines += lineCount
 				table.Append([]string{cLogin, fmt.Sprintf("%v", lineCount)})
 			}
 
+			tableString.WriteString(fmt.Sprintf("Top lines by @%s, total: %v\n\n", user.Login, totalLines))
 			table.Render()
 
 			rc := io.NopCloser(strings.NewReader(tableString.String()))
