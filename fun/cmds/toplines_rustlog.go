@@ -2,8 +2,8 @@ package fun
 
 import (
 	"context"
+	"fmt"
 	"io"
-	"strconv"
 	"strings"
 
 	. "github.com/0supa/func_supa/fun"
@@ -47,12 +47,12 @@ func init() {
 			table.SetHeader([]string{"Channel", "Lines"})
 
 			var cLogin string
-			var lineCount int
+			var lineCount uint64
 			for rows.Next() {
 				if err := rows.Scan(&cLogin, &lineCount); err != nil {
 					return err
 				}
-				table.Append([]string{cLogin, strconv.Itoa(lineCount)})
+				table.Append([]string{cLogin, fmt.Sprintf("%v", lineCount)})
 			}
 
 			rc := io.NopCloser(strings.NewReader(tableString.String()))
