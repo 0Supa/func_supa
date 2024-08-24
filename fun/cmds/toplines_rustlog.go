@@ -35,7 +35,35 @@ func init() {
 				return
 			}
 
-			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT channel_id, anyLast(channel_login), count() AS lines FROM rustlog_zonian.message_structured WHERE user_id=? GROUP BY channel_id ORDER BY lines DESC", user.ID)
+			rows, err := logs_db.Clickhouse.Query(context.Background(),
+				`
+SELECT
+    channel_id,
+    anyLast(channel_login) AS channel_login,
+    max(lines) AS lines
+FROM
+(
+    SELECT
+        channel_id,
+        anyLast(channel_login) AS channel_login,
+        count() AS lines
+    FROM rustlog_zonian.message_structured
+    WHERE user_id = ?
+    GROUP BY channel_id
+
+    UNION ALL
+
+    SELECT
+        channel_id,
+        anyLast(channel_login) AS channel_login,
+        count() AS lines
+    FROM rustlog.message_structured
+    WHERE user_id = ?
+    GROUP BY channel_id
+) AS combined_results
+GROUP BY channel_id
+ORDER BY lines DESC;
+`, user.ID, user.ID)
 			if err != nil {
 				return
 			}
