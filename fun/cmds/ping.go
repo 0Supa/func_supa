@@ -25,7 +25,7 @@ func init() {
 			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms - %s (%vMiB) - up:%s - channels:%v",
 				time.Since(m.Time).Milliseconds(),
 				runtime.Version(), mem.Alloc/1024/1024,
-				time.Since(InitTime),
+				time.Since(InitTime).Truncate(time.Second),
 				len(config.Meta.Channels)), m.ID)
 			return
 		},
