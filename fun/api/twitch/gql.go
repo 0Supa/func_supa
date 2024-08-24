@@ -66,6 +66,8 @@ type TwitchMsg struct {
 }
 
 func GetUser(login string, id string) (user TwitchUser, err error) {
+	login = strings.TrimPrefix(login, "@")
+
 	response := TwitchUserResponse{}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
