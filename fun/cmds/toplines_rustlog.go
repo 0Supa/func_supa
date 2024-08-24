@@ -48,7 +48,7 @@ FROM
         anyLast(channel_login) AS channel_login,
         count() AS lines
     FROM rustlog_zonian.message_structured
-    WHERE user_id = ?
+    WHERE user_id = ? AND message_type = 1
     GROUP BY channel_id
 
     UNION ALL
@@ -58,7 +58,7 @@ FROM
         anyLast(channel_login) AS channel_login,
         count() AS lines
     FROM rustlog.message_structured
-    WHERE user_id = ?
+    WHERE user_id = ? AND message_type = 1
     GROUP BY channel_id
 ) AS combined_results
 GROUP BY channel_id
