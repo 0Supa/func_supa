@@ -1,6 +1,8 @@
 package fun
 
 import (
+	"time"
+
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -19,3 +21,5 @@ func (f *FunData) Register(c *Cmd) {
 }
 
 var Fun = FunData{}
+
+var InitTime = time.Now()
