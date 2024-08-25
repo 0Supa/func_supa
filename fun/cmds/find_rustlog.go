@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -28,7 +29,7 @@ func init() {
 			}
 
 			pattern := strings.Join(args[1:], " ")
-			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT timestamp, user_login, text FROM message_structured WHERE channel_id=? AND match(text, ?) ORDER BY timestamp DESC", m.RoomID, pattern)
+			rows, err := logs_db.Clickhouse.Query(context.Background(), "SELECT timestamp, user_login, text FROM message_structured WHERE channel_id=? AND match(text, ?) ORDER BY timestamp DESC LIMIT 1000", m.RoomID, pattern)
 			if err != nil {
 				return
 			}
@@ -60,7 +61,14 @@ func init() {
 				return err
 			}
 
-			_, err = Say(m.RoomID, fmt.Sprintf("found %v messages: %s", messageCount, fmt.Sprintf("https://fi.supa.sh/dump/%v.txt", tt)), m.ID)
+			var _messageCount string
+			if messageCount >= 1000 {
+				_messageCount = ">999"
+			} else {
+				_messageCount = strconv.Itoa(messageCount)
+			}
+
+			_, err = Say(m.RoomID, fmt.Sprintf("found %s messages: %s", _messageCount, fmt.Sprintf("https://fi.supa.sh/dump/%v.txt", tt)), m.ID)
 			return err
 		},
 	})
