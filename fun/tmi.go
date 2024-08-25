@@ -16,15 +16,8 @@ var Client = twitch.NewAnonymousClient()
 var log = logger.New(os.Stdout, "TMI ", logger.LstdFlags)
 
 func init() {
-	user, err := api_twitch.GetSelf()
-	if err != nil {
-		logger.Panicln("failed getting current user", err)
-	}
-
-	if user.BlockedUsers != nil {
-		for _, u := range *user.BlockedUsers {
-			Fun.BlockedUserIDs = append(Fun.BlockedUserIDs, u.ID)
-		}
+	if config.Auth.Twitch.GQL.OwnerToken != "" {
+		LoadBlocklist()
 		log.Printf("%v blocked Twitch users\n", len(Fun.BlockedUserIDs))
 	}
 

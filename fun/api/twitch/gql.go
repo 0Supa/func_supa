@@ -101,7 +101,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	return
 }
 
-func GetSelf() (user TwitchUser, err error) {
+func GetOwner() (user TwitchUser, err error) {
 	response := TwitchUserResponse{}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
@@ -118,7 +118,7 @@ func GetSelf() (user TwitchUser, err error) {
 	req, _ := http.NewRequest("POST", "https://gql.twitch.tv/gql", bytes.NewBuffer(payload))
 	req.Header.Set("User-Agent", api.GenericUserAgent)
 	req.Header.Set("Client-Id", config.Auth.Twitch.GQL.ClientID)
-	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.Token)
+	req.Header.Set("Authorization", "OAuth "+config.Auth.Twitch.GQL.OwnerToken)
 
 	res, err := api.Generic.Do(req)
 	if err != nil {
