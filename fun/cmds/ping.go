@@ -22,11 +22,12 @@ func init() {
 			var mem runtime.MemStats
 			runtime.ReadMemStats(&mem)
 
-			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms - %s (%vMiB) - up:%s - channels:%v",
+			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms - %s (%vMiB) - up:%s - channels:%v - blocked:%v",
 				time.Since(m.Time).Milliseconds(),
 				runtime.Version(), mem.Alloc/1024/1024,
 				time.Since(InitTime).Truncate(time.Second),
-				len(config.Meta.Channels)), m.ID)
+				len(config.Meta.Channels),
+				len(Fun.BlockedUserIDs)), m.ID)
 			return
 		},
 	})
