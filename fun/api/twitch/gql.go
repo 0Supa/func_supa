@@ -12,12 +12,13 @@ import (
 	"github.com/0supa/func_supa/config"
 	"github.com/0supa/func_supa/fun/api"
 	api_kappa "github.com/0supa/func_supa/fun/api/kappa"
+	"github.com/0supa/func_supa/fun/utils"
 )
 
 type TwitchGQLPayload struct {
-	OperationName string `json:"operationName"`
-	Query         string `json:"query"`
-	Variables     any    `json:"variables"`
+	OperationName *string `json:"operationName"`
+	Query         string  `json:"query"`
+	Variables     any     `json:"variables"`
 }
 
 type TwitchGQLBaseResponse struct {
@@ -71,7 +72,7 @@ func GetUser(login string, id string) (user TwitchUser, err error) {
 	response := TwitchUserResponse{}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
-		OperationName: "User",
+		OperationName: utils.StringPtr("User"),
 		Query:         "query User($login:String $id:ID) { user(lookupType:ALL login:$login id:$id) { id login displayName } }",
 		Variables: TwitchUser{
 			Login: login,
@@ -155,7 +156,7 @@ func Say(channelID string, message string, parentID string, ctx ...int) (respons
 	}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
-		OperationName: "SendChatMessage",
+		OperationName: utils.StringPtr("SendChatMessage"),
 		Query:         "mutation SendChatMessage($input: SendChatMessageInput!) {  sendChatMessage(input: $input) {  dropReason  message {  id  }  }  }",
 		Variables: TwitchMsg{
 			Input{

@@ -12,3 +12,7 @@ var QuoteEscaper = strings.NewReplacer("\\", "\\\\", `"`, "\\\"")
 func IsPrivileged(userID string) bool {
 	return slices.Contains(config.Meta.PrivilegedUsers, userID)
 }
+
+func StringPtr(str string) *string {
+	return &str
+}
