@@ -105,11 +105,7 @@ func GetOwner() (user TwitchUser, err error) {
 	response := TwitchUserResponse{}
 
 	payload, err := json.Marshal(TwitchGQLPayload{
-		OperationName: "User",
-		Query:         "query User($login:String $id:ID) { user(lookupType:ALL login:$login id:$id) { id login displayName blockedUsers { id login } } }",
-		Variables: TwitchUser{
-			ID: config.Auth.Twitch.GQL.UserID,
-		},
+		Query: "{ currentUser { id login displayName blockedUsers { id login } } }",
 	})
 	if err != nil {
 		return
