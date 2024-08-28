@@ -22,7 +22,10 @@ func (f *FunData) Register(c *Cmd) {
 	f.Cmds = append(f.Cmds, *c)
 }
 
-var Fun = FunData{}
+var Fun = FunData{
+	Cmds:           []Cmd{},
+	BlockedUserIDs: map[string]struct{}{},
+}
 
 var InitTime = time.Now()
 
