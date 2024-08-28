@@ -9,6 +9,7 @@ import (
 	. "github.com/0supa/func_supa/fun"
 	"github.com/0supa/func_supa/fun/api"
 	. "github.com/0supa/func_supa/fun/api/twitch"
+	"github.com/0supa/func_supa/fun/utils"
 	"github.com/gempir/go-twitch-irc/v4"
 	regexp "github.com/wasilibs/go-re2"
 )
@@ -19,6 +20,10 @@ func init() {
 	Fun.Register(&Cmd{
 		Name: "scan_barcode",
 		Handler: func(m twitch.PrivateMessage) (err error) {
+			if utils.IsBot(m.User.ID) {
+				return
+			}
+
 			match := links.FindStringSubmatch(m.Message)
 			if len(match) < 3 {
 				return

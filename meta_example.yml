@@ -2,6 +2,8 @@ channels:
   - "675052240" # 8supa
 privileged_users: # privileged users get access to some special commands, don't give to people you don't trust
   - "675052240"
+bot_users: # bots are ignored from some modules
+  - "100135110"
 
 # functions with no 'channels' whitelisted are executed everywhere
 functions:

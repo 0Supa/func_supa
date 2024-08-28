@@ -10,6 +10,7 @@ import (
 var Meta = struct {
 	Channels        []string `yaml:"channels"`
 	PrivilegedUsers []string `yaml:"privileged_users"`
+	BotUsers        []string `yaml:"bot_users"`
 	Functions       map[string]struct {
 		Channels []string `yaml:"channels"`
 	} `yaml:"functions"`
