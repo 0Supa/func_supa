@@ -34,7 +34,7 @@ func init() {
 			return
 		}
 
-		if slices.Contains(Fun.BlockedUserIDs, m.User.ID) {
+		if IsBlocked(m.User.ID) {
 			return
 		}
 

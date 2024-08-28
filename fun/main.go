@@ -15,7 +15,7 @@ type Cmd struct {
 
 type FunData struct {
 	Cmds           []Cmd
-	BlockedUserIDs []string
+	BlockedUserIDs map[string]struct{}
 }
 
 func (f *FunData) Register(c *Cmd) {
@@ -34,9 +34,14 @@ func LoadBlocklist() {
 	}
 
 	if user.BlockedUsers != nil {
-		Fun.BlockedUserIDs = nil
+		clear(Fun.BlockedUserIDs)
 		for _, u := range *user.BlockedUsers {
-			Fun.BlockedUserIDs = append(Fun.BlockedUserIDs, u.ID)
+			Fun.BlockedUserIDs[u.ID] = struct{}{}
 		}
 	}
+}
+
+func IsBlocked(userID string) bool {
+	_, exists := Fun.BlockedUserIDs[userID]
+	return exists
 }
