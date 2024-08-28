@@ -2,6 +2,7 @@ package fun
 
 import (
 	"fmt"
+	"math/rand"
 	"runtime"
 	"time"
 
@@ -22,9 +23,12 @@ func init() {
 			var mem runtime.MemStats
 			runtime.ReadMemStats(&mem)
 
-			_, err = Say(m.RoomID, fmt.Sprintf("pong! %vms - %s (%vMiB) - up:%s - channels:%v - blocked:%v",
+			e := []string{":3", ":x", "c:", ":$", ">.<", "^.^", "^o^"}
+			_, err = Say(m.RoomID, fmt.Sprintf("%s %vms, %s, %vMiB, up:%s, channels:%v, blocked:%v",
+				e[rand.Intn(len(e))],
 				time.Since(m.Time).Milliseconds(),
-				runtime.Version(), mem.Alloc/1024/1024,
+				runtime.Version(),
+				mem.Alloc/1024/1024,
 				time.Since(InitTime).Truncate(time.Second),
 				len(config.Meta.Channels),
 				len(Fun.BlockedUserIDs)), m.ID)
