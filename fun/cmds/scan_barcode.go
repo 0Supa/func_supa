@@ -53,12 +53,17 @@ func init() {
 				return
 			}
 
-			for _, str := range strings.Split(string(out), "\n") {
-				dat := strings.SplitN(str, ":", 2)
+			for _, barcode := range strings.Split(string(out), "\n") {
+				dat := strings.SplitN(barcode, ":", 2)
 				if len(dat) < 2 || (!strings.HasPrefix(dat[0], "EAN") && !strings.HasPrefix(dat[0], "UPC")) {
 					continue
 				}
-				_, err = Say(m.RoomID, str+" https://world.openfoodfacts.org/product/"+url.PathEscape(dat[1]), m.ID)
+
+				foodfactsLink := "https://world.openfoodfacts.org/product/" + url.PathEscape(dat[1])
+				res, _err := api.Generic.Head(foodfactsLink)
+				if _err == nil && res.StatusCode == http.StatusOK {
+					_, err = Say(m.RoomID, foodfactsLink, m.ID)
+				}
 			}
 
 			return
