@@ -132,7 +132,7 @@ func GetOwner() (user TwitchUser, err error) {
 	return
 }
 
-var zeroWidthChar = "\U000E0000"
+const zeroWidthChar = "\U000E0000"
 
 func Say(channelID string, message string, parentID string, ctx ...int) (response TwitchSendMsgResponse, err error) {
 	if len(ctx) == 0 {
