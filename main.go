@@ -77,14 +77,14 @@ func main() {
 			res, err := httpClient.Get("https://logs.supa.codes/channels")
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
 			rustlog := LogChannels{}
 			err = json.NewDecoder(res.Body).Decode(&rustlog)
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 			res.Body.Close()
 
@@ -96,14 +96,14 @@ func main() {
 			res, err = httpClient.Get("https://tv.supa.sh/tags/ro")
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
 			liveChannels := LiveChannels{}
 			err = json.NewDecoder(res.Body).Decode(&liveChannels)
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 			res.Body.Close()
 
@@ -119,13 +119,13 @@ func main() {
 				joinPayload.Channels = append(joinPayload.Channels, ch.UserID)
 			}
 			if len(joinPayload.Channels) == 0 {
-				return
+				continue
 			}
 
 			body, err := json.Marshal(joinPayload)
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
 			req, _ := http.NewRequest(
@@ -138,7 +138,7 @@ func main() {
 			res, err = httpClient.Do(req)
 			if err != nil {
 				log.Println(err)
-				return
+				continue
 			}
 
 			if res.StatusCode != http.StatusOK {
@@ -149,7 +149,7 @@ func main() {
 				if err != nil {
 					log.Println(err)
 				}
-				return
+				continue
 			}
 			res.Body.Close()
 
