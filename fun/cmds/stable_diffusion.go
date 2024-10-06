@@ -31,6 +31,11 @@ func init() {
 				return
 			}
 
+			if upload.Checksum == "9b00921685afb8cc77218cdf39ce78c2" { // blank image
+				_, err = Say(m.RoomID, "prompt rejected", m.ID)
+				return
+			}
+
 			_, err = Say(m.RoomID, upload.Link, m.ID)
 			return
 		},
