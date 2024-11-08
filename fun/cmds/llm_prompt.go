@@ -18,7 +18,7 @@ func systemPrompt(m twitch.PrivateMessage) string {
 }
 
 func init() {
-	model := "@cf/meta/llama-3-8b-instruct"
+	model := "@cf/meta/llama-3.1-70b-instruct"
 	Fun.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
