@@ -1,6 +1,7 @@
 package fun
 
 import (
+	"log"
 	"net/http"
 	"net/url"
 	"os/exec"
@@ -34,12 +35,14 @@ func init() {
 			res, err := api.Generic.Head(fileURL)
 			res.Body.Close()
 			if err != nil || res.StatusCode != http.StatusOK || !strings.HasPrefix(res.Header.Get("Content-Type"), "image/") {
-				return
+				log.Println(err)
+				return nil
 			}
 
 			res, err = api.Generic.Get(fileURL)
 			if err != nil {
-				return
+				log.Println(err)
+				return nil
 			}
 
 			cmd := exec.Command("zbarimg", "-q", "-")
