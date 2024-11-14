@@ -46,6 +46,7 @@ func init() {
 			}()
 
 			cmd := exec.Command("./bin/yt-dlp",
+				"--force-ipv4",
 				"-S", "vcodec:h264",
 				"--max-filesize", "100M",
 				"--embed-metadata",
