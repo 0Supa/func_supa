@@ -38,8 +38,8 @@ func init() {
 			return
 		}
 
-		go func() {
-			for _, cmd := range Fun.Cmds {
+		for _, cmd := range Fun.Cmds {
+			go func(cmd Cmd) {
 				channels := config.Meta.Functions[cmd.Name].Channels
 				if len(channels) > 0 && !slices.Contains(channels, m.RoomID) {
 					return
@@ -50,8 +50,8 @@ func init() {
 					log.Printf("[cmd error] %v: %v => %v\n", m.User.Name, m.Message, err)
 					api_twitch.Say(m.RoomID, "🚫 "+err.Error(), m.ID)
 				}
-			}
-		}()
+			}(cmd)
+		}
 	})
 
 	for _, userID := range config.Meta.Channels {
