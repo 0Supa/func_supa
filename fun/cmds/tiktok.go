@@ -50,7 +50,6 @@ func init() {
 				"-S", "vcodec:h264",
 				"--max-filesize", "100M",
 				"--write-info-json",
-				"--write-thumbnail",
 				"--embed-metadata",
 				"-P", fmt.Sprintf("%s/%s", parentDir, m.User.Name),
 				"-o", fmt.Sprintf("%v.%%(ext)s", time.Now().Unix()),
