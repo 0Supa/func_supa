@@ -33,7 +33,9 @@ func init() {
 				channel = args[1]
 			}
 
-			req, _ := http.NewRequest("POST", "http://127.0.0.1:8989/clip/"+url.PathEscape(channel), nil)
+			req, _ := http.NewRequest("POST", "http://127.0.0.1:8989/clip/"+
+				url.PathEscape(channel)+
+				fmt.Sprintf("?creator_id=%s&parent_id=%s", m.User.ID, m.RoomID), nil)
 			res, err := api.Generic.Do(req)
 			if err != nil {
 				return
