@@ -19,7 +19,7 @@ import (
 var cooldown = map[string]struct{}{}
 
 func init() {
-	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p)\/\S+`)
+	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p|share)\/\S+`)
 	parentDir := "/var/www/fi.supa.sh/tiktok"
 
 	Fun.Register(&Cmd{
