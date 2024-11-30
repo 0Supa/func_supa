@@ -29,7 +29,10 @@ func init() {
 				return
 			}
 
-			link := strings.Replace(links.FindString(m.Message), "/reels/", "/reel/", 1)
+			link := strings.Replace(strings.Replace(
+				links.FindString(m.Message),
+				"/reels/", "/reel/", 1),
+				"/share/reel/", "/share/", 1)
 			if link == "" {
 				return
 			}
