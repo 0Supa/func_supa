@@ -22,6 +22,8 @@ func init() {
 	links := regexp.MustCompile(`(?i)\S*tiktok\.com\/\S+|\S*instagram\.com\/(reels?|p|share)\/\S+`)
 	parentDir := "/var/www/fi.supa.sh/tiktok"
 
+	urlFix := strings.NewReplacer("/reels/", "/reel/", "/share/reel/", "/share/")
+
 	Fun.Register(&Cmd{
 		Name: "tiktok",
 		Handler: func(m twitch.PrivateMessage) (err error) {
@@ -29,10 +31,7 @@ func init() {
 				return
 			}
 
-			link := strings.Replace(strings.Replace(
-				links.FindString(m.Message),
-				"/reels/", "/reel/", 1),
-				"/share/reel/", "/share/", 1)
+			link := urlFix.Replace(links.FindString(m.Message))
 			if link == "" {
 				return
 			}
