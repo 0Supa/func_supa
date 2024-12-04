@@ -51,6 +51,7 @@ func init() {
 				"--force-ipv4",
 				"-S", "vcodec:h264",
 				"--max-filesize", "100M",
+				"--match-filters", "!is_live & !was_live",
 				"--write-info-json",
 				"--embed-metadata",
 				"-P", fmt.Sprintf("%s/%s", parentDir, m.User.Name),
