@@ -36,7 +36,7 @@ func init() {
 				return
 			}
 
-			if _, found := cooldown[m.User.ID]; found {
+			if _, found := cooldown[m.User.ID]; found && m.Channel != "omuljake" {
 				return
 			}
 
