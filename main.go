@@ -114,7 +114,7 @@ func main() {
 
 			joinPayload := JoinPayload{}
 			for _, ch := range liveChannels {
-				if ch.Viewers < 2 || slices.Contains(ignored, ch.UserID) {
+				if ch.Viewers < 10 || slices.Contains(ignored, ch.UserID) {
 					continue
 				}
 				resMsg.WriteString(" @" + ch.Name)
