@@ -31,7 +31,8 @@ func init() {
 	Fun.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
-			model := "@cf/meta/llama-3.1-70b-instruct"
+			var model string
+			var messages []QueryMessage
 
 			args := strings.Split(m.Message, " ")
 			if len(args) < 2 {
@@ -40,22 +41,18 @@ func init() {
 
 			if args[0] == "`deepseek" || args[0] == "`r1" {
 				model = "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
-			} else if args[0] != "`ask" && args[0] != "`llm" {
+			} else if args[0] == "`ask" || args[0] == "`llm" {
+				model = "@cf/meta/llama-3.1-70b-instruct"
+				messages = append(messages, QueryMessage{Role: "system", Content: systemPrompt(m)})
+			} else {
 				return
 			}
 
+			messages = append(messages, QueryMessage{Role: "user", Content: strings.Join(args[1:], " ")})
+
 			query := TextQuery{
-				Stream: true,
-				Messages: []QueryMessage{
-					{
-						Role:    "system",
-						Content: systemPrompt(m),
-					},
-					{
-						Role:    "user",
-						Content: strings.Join(args[1:], " "),
-					},
-				},
+				Stream:   true,
+				Messages: messages,
 			}
 
 			c := make(chan Result)
