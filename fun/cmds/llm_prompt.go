@@ -28,12 +28,19 @@ Q:`,
 }
 
 func init() {
-	model := "@cf/meta/llama-3.1-70b-instruct"
 	Fun.Register(&Cmd{
 		Name: "llm",
 		Handler: func(m twitch.PrivateMessage) (err error) {
+			model := "@cf/meta/llama-3.1-70b-instruct"
+
 			args := strings.Split(m.Message, " ")
-			if (args[0] != "`ask" && args[0] != "`llm") || len(args) < 2 {
+			if len(args) < 2 {
+				return
+			}
+
+			if args[0] == "`deepseek" || args[0] == "`r1" {
+				model = "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
+			} else if args[0] != "`ask" && args[0] != "`llm" {
 				return
 			}
 
