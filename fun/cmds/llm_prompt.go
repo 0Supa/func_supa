@@ -42,7 +42,7 @@ func init() {
 			if args[0] == "`deepseek" || args[0] == "`r1" {
 				model = "@cf/deepseek-ai/deepseek-r1-distill-qwen-32b"
 			} else if args[0] == "`ask" || args[0] == "`llm" {
-				model = "@cf/meta/llama-3.1-70b-instruct"
+				model = "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 				messages = append(messages, QueryMessage{Role: "system", Content: systemPrompt(m)})
 			} else {
 				return
