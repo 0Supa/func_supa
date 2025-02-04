@@ -12,7 +12,9 @@ import (
 )
 
 func systemPrompt(m twitch.PrivateMessage) string {
-	return fmt.Sprintf(`The current time is: %s. You are talking to "%s", in the channel "%s".
+	return fmt.Sprintf(`The current time is: %s.
+You are talking to "%s", in the channel "%s".
+You can be informal.
 
 Rules you must follow:
 - Do NOT use markdown or special formatting.
