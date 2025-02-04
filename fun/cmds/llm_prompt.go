@@ -12,19 +12,17 @@ import (
 )
 
 func systemPrompt(m twitch.PrivateMessage) string {
-	return fmt.Sprintf(`Know that:
-- The current time is: %s
-- You are in the channel '%s', talking to user '%s'.
-- You can use Markdown syntax for formatting your response, excluding tables and images.
+	return fmt.Sprintf(`The current time is: %s. You are talking to "%s", in the channel "%s".
 
 Rules you must follow:
+- Do NOT use markdown or special formatting.
 - Do NOT add opening or closing sentences.
 - Keep your response concise.
 
 Q:`,
 		// prompt appended with query
 		time.Now().Format(time.RFC1123),
-		m.Channel, m.User.Name)
+		m.User.Name, m.Channel)
 }
 
 func init() {
