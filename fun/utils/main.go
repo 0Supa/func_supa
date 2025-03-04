@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"math"
 	"strings"
 
 	"github.com/0supa/func_supa/config"
@@ -34,4 +36,15 @@ func IsBot(userID string) bool {
 
 func StringPtr(str string) *string {
 	return &str
+}
+
+func FormatDuration(timeInSeconds int) string {
+	hours := int(math.Floor(float64(timeInSeconds) / 3600))
+	minutes := (timeInSeconds % 3600) / 60
+	seconds := timeInSeconds % 60
+
+	if hours > 0 {
+		return fmt.Sprintf("%d:%02d:%02d", hours, minutes, seconds)
+	}
+	return fmt.Sprintf("%d:%02d", minutes, seconds)
 }
