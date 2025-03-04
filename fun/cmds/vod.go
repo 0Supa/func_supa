@@ -77,6 +77,7 @@ func init() {
 			vod := streams[0]
 
 			var msg string
+			uptime := int(time.Since(vod.CreatedAt).Seconds())
 			if vod.EndedAt == nil {
 				msg += "(live) "
 			} else {
@@ -84,12 +85,15 @@ func init() {
 			}
 
 			if vod.DurationMS == nil {
-				msg += utils.FormatDuration(int(time.Since(vod.CreatedAt).Seconds()))
+				msg += utils.FormatDuration(uptime)
 			} else {
 				msg += utils.FormatDuration(*vod.DurationMS / 1000)
 			}
 
 			msg += fmt.Sprintf(" https://tv.supa.sh/vods/%s/%v", user.Login, vod.ID)
+			if uptime > 30 {
+				msg += fmt.Sprintf("?t=%v", uptime-30)
+			}
 
 			_, err = Say(m.RoomID, msg, m.ID)
 			return
