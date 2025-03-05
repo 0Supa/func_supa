@@ -34,7 +34,7 @@ func init() {
 		Name: "vod",
 		Handler: func(m twitch.PrivateMessage) (err error) {
 			args := strings.Split(m.Message, " ")
-			if len(args) < 1 || args[0] != "`vod" {
+			if len(args) < 1 || (args[0] != "`vod" && args[0] != "`vods") {
 				return
 			}
 
@@ -53,6 +53,11 @@ func init() {
 			buf, _ := io.ReadAll(res.Body)
 			err = json.Unmarshal(buf, &user)
 			if err != nil {
+				return
+			}
+
+			if args[0] == "`vods" {
+				_, err = Say(m.RoomID, "https://tv.supa.sh/vods/"+user.Login, m.ID)
 				return
 			}
 
