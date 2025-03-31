@@ -95,7 +95,7 @@ func main() {
 				ignored = append(ignored, ch.UserID)
 			}
 
-			res, err = httpClient.Get("https://tv.supa.sh/tags/ro")
+			res, err = httpClient.Get("https://api-tv.supa.sh/tags/ro")
 			if err != nil {
 				log.Println(err)
 				continue
