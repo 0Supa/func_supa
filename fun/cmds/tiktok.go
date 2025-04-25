@@ -64,6 +64,12 @@ func init() {
 			if err != nil {
 				if exit, ok := err.(*exec.ExitError); ok && exit.ExitCode() == 1 {
 					log.Printf("yt-dlp error: %s:\n%s\n", err.Error(), exit.Stderr)
+
+					msg := string(exit.Stderr)
+					if strings.Contains(msg, "Restricted Video") || strings.Contains(msg, "This post may not be comfortable") {
+						Say(m.RoomID, "🔞 Restricted Video", m.ID)
+					}
+
 					return nil
 				}
 				return err
